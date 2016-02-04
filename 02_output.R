@@ -15,11 +15,39 @@ library(maptools) #for fortify function
 library(rgdal) # for spatial projection
 library(bcmaps) #for BC boundary
 library(raster) #for interesect and aggregate functions
+library(rmapshaper) #simplifying the district boundaries
+library(broom) #for tidy function to replace fortify which converts shp file to df
 library(ggplot2)
 
-## preparing census subdivision shapefiles from Statistics Canada
-# cd <- readOGR(dsn = "data", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
-csd <- readOGR(dsn = "data", layer = "gcsd000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
+# ## preparing census subdivision shapefiles from Statistics Canada
+# csd <- readOGR(dsn = "data", layer = "gcsd000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
+# 
+# # ## extract shape for BC only
+# csd <- csd[csd$PRUID == "59", ]
 
-## extract shape for BC only
-csd <- csd[csd$PRUID == "59", ] 
+## Simplify the polygons in shapefile
+cd <- ms_simplify(cd, keep = 0.01, keep_shapes = TRUE, explode = TRUE)
+
+## aggregating small polygons
+cd <- aggregate(cd, by = "CDNAME")
+
+## overting spatial file to dataframe
+# cd_plot <- broom::tidy(cd)
+cd_plot <- fortify(cd, region = "CDNAME")
+
+## joining tabular and spatial data after c
+cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "Name.x"))
+
+
+## plotting
+popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
+  geom_path() +
+  geom_polygon() 
+# facet_wrap(~year, ncol = 5)
+plot(popn_plot)
+
+
+
+
+
+
