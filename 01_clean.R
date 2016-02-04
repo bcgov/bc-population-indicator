@@ -11,14 +11,23 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 library(dplyr) #data munging
+library(reshape2) #format dataframe
+library(rgdal) # for reading shapefile
 
 
 ## loading population data of 2001-05, and 2011-15 from BC Stats
 popn01 <- read.csv("Z:/sustainability/population/BC_RD_popn2001-2011.csv", stringsAsFactors = FALSE)
 popn11 <- read.csv("Z:/sustainability/population/BC_RD_popn2011-2015.csv", stringsAsFactors = FALSE)
 
+## preparing census district shapefiles from Statistics Canada
+cd <- readOGR(dsn = "data", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
+
+## extract shape for BC only
+cd<- cd[cd$PRUID =="59", ] 
+
 ## merge 01 and 11 dataframes
 popn <- left_join(popn01, popn11, by = "SGC")
+popn$SGC <- NULL
 popn$Area.Type.x <- NULL
 popn$Area.Type.y <- NULL
 popn$Name.y <- NULL
@@ -26,29 +35,32 @@ popn$X2011.y <- NULL
 
 ## substitute "na" characters to NA
 popn[popn == "na"] <- NA
+
+## format name
 popn$Name.x <- gsub("\\(See Notes)", "", popn$Name.x)
 
-# ## delete regional district entries and use only subdivisions for plotting
-# popn01 <- popn01 %>% 
-#   filter(popn01$Area.Type != "RD" & popn01$Area.Type != "R")
-# popn11 <- popn11 %>% 
-#   filter(popn11$Area.Type != "RD" & popn11$Area.Type != "R")
-# 
-# ## take out indent in district names in both dataframes
-# popn01$Name <- gsub("     ", "", popn01$Name)
-# popn11$Name <- gsub("     ", "", popn11$Name)
-# 
-# ## compare district and municipality names of both files and set them to be the same for merging dataframe
-# setdiff(popn01$Name, popn11$Name)
-# setdiff(popn11$Name, popn01$Name)
-# popn01$Name[popn01$Name == "100 Mile House"] <- "One Hundred Mile House"
-# popn01$Name[popn01$Name == "Langley" & popn01$Area.Type == "C"] <- "Langley, City of"
-# popn01$Name[popn01$Name == "Langley" & popn01$Area.Type == "DM"] <- "Langley, District Municipality"
-# popn01$Name[popn01$Name == "North Vancouver" & popn01$Area.Type == "C"] <- "North Vancouver, City of"
-# popn01$Name[popn01$Name == "North Vancouver" & popn01$Area.Type == "DM"] <- "North Vancouver, District Municipality"
-# popn01$Name[popn01$Name == "Sechelt Ind Gov Dist  (Part)" ] <- "Sechelt Ind Gov Dist (Part-Powell River)"
-# popn01$Name[popn01$Name == "Sechelt"] <- "Sechelt District Municipality"
-# popn01$Name[popn01$Name == "Sechelt Ind Gov Dist (Part)"] <- "Sechelt Ind Gov Dist (Part-Sunshine Coast)"
+## delete regional district entries and use only subdivisions for plotting
+popn <- popn %>% 
+  filter(popn$Area.Type.x == "RD" | popn$Area.Type.x == "R") 
+# %>% 
+#   filter(popn$Name.x != " Strathcona Regional Dist. ") # temporarily take out the rd that the 
+#                                                       # shp file does not have
 
 
+## take out indent in district names in the dataframe
+popn$Name.x <- gsub("     ", "", popn$Name.x) 
+
+## compare names of tabular and shp files and set them to be the same for merging dataframe
+setdiff(cd$CDNAME, popn$Name.x)
+setdiff(popn$Name.x, cd$CDNAME)
+popn$Name.x[popn$Name.x == " Comox Regional District "] <- "Comox Valley"
+popn$Name.x[popn$Name.x == " Comox-Strathcona "] <- "Strathcona"
+popn$Name.x[popn$Name.x == "Northern Rockies "] <- "Northern Rockies"
+popn$Name.x[popn$Name.x == "Kootenay-Boundary"] <- "Kootenay Boundary"
+
+## create long data table for plotting
+popn_long <- melt(popn, id.vars = "Name.x", variable.name = "year", value.name = "population")
+
+## convert characters to numeric values
+popn_long$population <- as.numeric(popn_long$population)
 
