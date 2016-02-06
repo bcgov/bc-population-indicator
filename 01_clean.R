@@ -64,3 +64,6 @@ popn_long <- melt(popn, id.vars = "Name.x", variable.name = "year", value.name =
 ## convert characters to numeric values
 popn_long$population <- as.numeric(popn_long$population)
 
+## format long table entries
+popn_long$year <- gsub("X", "", popn_long$year)
+popn_long$year <- gsub(".x", "", popn_long$year)
