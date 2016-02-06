@@ -42,8 +42,8 @@ cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "Name.x"))
 ## plotting
 popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
   geom_path() +
-  geom_polygon() 
-# facet_wrap(~year, ncol = 5)
+  geom_polygon() +
+facet_wrap(~year, ncol = 5)
 plot(popn_plot)
 
 
