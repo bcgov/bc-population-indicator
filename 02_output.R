@@ -43,7 +43,13 @@ cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "Name.x"))
 popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
   geom_path() +
   geom_polygon() +
-facet_wrap(~year, ncol = 5)
+  facet_wrap(~year, ncol = 5) +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+         legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"))
 plot(popn_plot)
 
 
