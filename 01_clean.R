@@ -14,12 +14,23 @@ library(dplyr) #data munging
 library(reshape2) #format dataframe
 library(rgdal) # for reading shapefile
 
+## Tabular data files publically available from BC Stats on-line: 
+## http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx
+## [license: BC Crown Copyright]
+## Files located under Municipalities, Regional Districts & Development Regions section,
+## converted .xls files into machine-readable .csv files.
 
-## loading population data of 2001-05, and 2011-15 from BC Stats
+## loading population data of 2001-05 and 2011-15
 popn01 <- read.csv("Z:/sustainability/population/BC_RD_popn2001-2011.csv", stringsAsFactors = FALSE)
 popn11 <- read.csv("Z:/sustainability/population/BC_RD_popn2011-2015.csv", stringsAsFactors = FALSE)
 
-## preparing census district shapefiles from Statistics Canada
+## BC Census Division spatial data publically available from Statistics Canada on-line:
+## 2011 Statistics Canada Census - Boundary files: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm
+## (license: Statistics Canada Open License Agreement)
+## Select -- Format: ArcGIS (.shp), Boundary: Census Divisions, Type: Cartographic Boundary File
+## Unpackaged .zip file
+
+## preparing census division shapefiles
 cd <- readOGR(dsn = "data", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
 
 ## extract shape for BC only
