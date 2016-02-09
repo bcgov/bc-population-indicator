@@ -15,9 +15,9 @@ library(maptools) #for fortify function
 library(rgdal) # for spatial projection
 library(bcmaps) #for BC boundary
 library(raster) #for interesect and aggregate functions
-library(rmapshaper) #simplifying the district boundaries
+library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
 library(broom) #for tidy function to replace fortify which converts shp file to df
-library(ggplot2)
+library(ggplot2) #for plotting
 
 # ## preparing census subdivision shapefiles from Statistics Canada
 # csd <- readOGR(dsn = "data", layer = "gcsd000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
