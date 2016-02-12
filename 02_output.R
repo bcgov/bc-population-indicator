@@ -16,7 +16,9 @@ library(rgdal) # for spatial projection
 library(bcmaps) #for BC boundary
 library(raster) #for interesect and aggregate functions
 library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
+library(envreportutils) #soe theme
 library(ggplot2) #for plotting
+library(RColorBrewer) #for colour palette
 
 # ## preparing census subdivision shapefiles from Statistics Canada
 # csd <- readOGR(dsn = "data", layer = "gcsd000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
@@ -37,16 +39,20 @@ cd_plot <- fortify(cd, region = "CDUID")
 cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "SGC"))
 
 
+## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
+pal <- brewer.pal(9, "YlOrBr")
+
 ## plotting
-popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = -population)) +
+popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
   geom_path() +
   geom_polygon() +
+  scale_fill_gradientn(colours = pal) +
   facet_wrap(~year, ncol = 5) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
-         legend.title = element_text(size = 11, face = "bold"),
+        legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(popn_plot)
 
