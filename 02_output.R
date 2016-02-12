@@ -16,7 +16,6 @@ library(rgdal) # for spatial projection
 library(bcmaps) #for BC boundary
 library(raster) #for interesect and aggregate functions
 library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
-library(broom) #for tidy function to replace fortify which converts shp file to df
 library(ggplot2) #for plotting
 
 # ## preparing census subdivision shapefiles from Statistics Canada
@@ -32,7 +31,6 @@ cd <- ms_simplify(cd, keep = 0.01, keep_shapes = TRUE, explode = TRUE)
 cd <- aggregate(cd, by = "CDNAME")
 
 ## overting spatial file to dataframe
-# cd_plot <- broom::tidy(cd)
 cd_plot <- fortify(cd, region = "CDNAME")
 
 ## joining tabular and spatial data after c
