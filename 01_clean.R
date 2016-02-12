@@ -31,16 +31,14 @@ popn11 <- read.csv("Z:/sustainability/population/BC_RD_popn2011-2015.csv", strin
 ## Unpackaged .zip file
 
 ## preparing census division shapefiles
-cd <- readOGR(dsn = "data", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
+cd <- readOGR(dsn = "Z:/sustainability/population/shapefile", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
 
 ## extract shape for BC only
 cd<- cd[cd$PRUID =="59", ] 
 
 ## merge 01 and 11 dataframes
-popn <- left_join(popn01, popn11, by = "SGC")
+popn <- left_join(popn01, popn11, by = "SGC") 
 
-## deselect unneeded columns
-popn <- select(popn, -SGC, -Area.Type.x, -Area.Type.y, -Name.y, -X2011.y)
 
 ## substitute "na" characters to NA
 popn[popn == "na"] <- NA
@@ -48,27 +46,12 @@ popn[popn == "na"] <- NA
 ## format name
 popn$Name.x <- gsub("\\(See Notes)", "", popn$Name.x)
 
-## delete regional district entries and use only subdivisions for plotting
-popn <- popn %>% 
-  filter(popn$Area.Type.x == "RD" | popn$Area.Type.x == "R") 
-# %>% 
-#   filter(popn$Name.x != " Strathcona Regional Dist. ") # temporarily take out the rd that the 
-#                                                       # shp file does not have
-
-
 ## take out indent in district names in the dataframe
 popn$Name.x <- gsub("     ", "", popn$Name.x) 
 
-## compare names of tabular and shp files and set them to be the same for merging dataframe
-setdiff(cd$CDNAME, popn$Name.x)
-setdiff(popn$Name.x, cd$CDNAME)
-popn$Name.x[popn$Name.x == " Comox Regional District "] <- "Comox Valley"
-popn$Name.x[popn$Name.x == " Comox-Strathcona "] <- "Strathcona"
-popn$Name.x[popn$Name.x == "Northern Rockies "] <- "Northern Rockies"
-popn$Name.x[popn$Name.x == "Kootenay-Boundary"] <- "Kootenay Boundary"
 
 ## create long data table for plotting
-popn_long <- melt(popn, id.vars = "Name.x", variable.name = "year", value.name = "population")
+popn_long <- melt(popn, id.vars = c("Name.x", "SGC"), variable.name = "year", value.name = "population")
 
 ## convert characters to numeric values
 popn_long$population <- as.numeric(popn_long$population)
