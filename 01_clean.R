@@ -38,15 +38,17 @@ cd<- cd[cd$PRUID =="59", ]
 
 ## merge 01 and 11 dataframes
 popn <- left_join(popn01, popn11, by = "SGC") 
-
+ 
+## clean dataframe 
+popn <-  popn %>% 
+  filter(popn$Area.Type.x == "RD" | popn$Area.Type.x == "R") %>% 
+  select(-Area.Type.x, -Area.Type.y, -Name.y, -X2011.y)
 
 ## substitute "na" characters to NA
 popn[popn == "na"] <- NA
 
 ## format name
 popn$Name.x <- gsub("\\(See Notes)", "", popn$Name.x)
-
-## take out indent in district names in the dataframe
 popn$Name.x <- gsub("     ", "", popn$Name.x) 
 
 
@@ -59,3 +61,14 @@ popn_long$population <- as.numeric(popn_long$population)
 ## format long table entries
 popn_long$year <- gsub("X", "", popn_long$year)
 popn_long$year <- gsub(".x", "", popn_long$year)
+
+## format SGC code to match with CDUID code in shapefile for merging dataframes later
+for (i in 1:length(popn_long$SGC)) {
+  if (nchar(popn_long$SGC[i]) == 4) {
+    popn_long$SGC[i] <- sub("^", "590", popn_long$SGC[i])
+  }
+  else {
+    popn_long$SGC[i] <- sub("^", "59", popn_long$SGC[i])
+  }
+  popn_long$SGC[i] <- substr(popn_long$SGC[i], 0, 4)
+}

@@ -28,17 +28,17 @@ library(ggplot2) #for plotting
 cd <- ms_simplify(cd, keep = 0.01, keep_shapes = TRUE, explode = TRUE)
 
 ## aggregating small polygons
-cd <- aggregate(cd, by = "CDNAME")
+cd <- aggregate(cd, by = "CDUID")
 
-## overting spatial file to dataframe
-cd_plot <- fortify(cd, region = "CDNAME")
+## converting spatial file to dataframe
+cd_plot <- fortify(cd, region = "CDUID")
 
 ## joining tabular and spatial data after c
-cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "Name.x"))
+cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "SGC"))
 
 
 ## plotting
-popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
+popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = -population)) +
   geom_path() +
   geom_polygon() +
   facet_wrap(~year, ncol = 5) +
