@@ -38,11 +38,9 @@ cd<- cd[cd$PRUID =="59", ]
 
 ## merge 01 and 11 dataframes
 popn <- left_join(popn01, popn11, by = "SGC")
-popn$SGC <- NULL
-popn$Area.Type.x <- NULL
-popn$Area.Type.y <- NULL
-popn$Name.y <- NULL
-popn$X2011.y <- NULL
+
+## deselect unneeded columns
+popn <- select(popn, -SGC, -Area.Type.x, -Area.Type.y, -Name.y, -X2011.y)
 
 ## substitute "na" characters to NA
 popn[popn == "na"] <- NA
