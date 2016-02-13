@@ -40,13 +40,13 @@ cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "SGC"))
 
 
 ## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
-pal <- brewer.pal(9, "YlOrBr")
+pal <- brewer.pal(7, "BrBG")[1:6]
 
 ## plotting
 popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
   geom_path() +
   geom_polygon() +
-  scale_fill_gradientn(colours = pal, 
+  scale_fill_manual(colours = rev(pal), 
                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
   facet_wrap(~year, ncol = 5) +
   theme_minimal() +
