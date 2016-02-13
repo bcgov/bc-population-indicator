@@ -72,3 +72,15 @@ for (i in 1:length(popn_long$SGC)) {
   }
   popn_long$SGC[i] <- substr(popn_long$SGC[i], 0, 4)
 }
+
+
+## calculate annual change in population
+## create a function to calculate percentage
+pct <- function(x) {
+  (lag(x)-x)/x*100
+}
+
+popn_long <- popn_long %>% 
+  group_by(Name.x) %>% 
+  mutate_each(funs(pct), population) %>% 
+  filter(year != 2001)
