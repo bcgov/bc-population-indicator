@@ -46,7 +46,8 @@ pal <- brewer.pal(9, "YlOrBr")
 popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
   geom_path() +
   geom_polygon() +
-  scale_fill_gradientn(colours = pal) +
+  scale_fill_gradientn(colours = pal, 
+                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
   facet_wrap(~year, ncol = 5) +
   theme_minimal() +
   theme(axis.title = element_blank(),
@@ -55,9 +56,3 @@ popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill =
         legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(popn_plot)
-
-
-
-
-
-
