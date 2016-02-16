@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 library(dplyr) #data munging
+library(tidyr) #for reformatting dataframes
 library(reshape2) #format dataframe
-library(rgdal) # for reading shapefile
+library(rgdal) #for reading shapefile
 
 ## Tabular data files publically available from BC Stats on-line: 
 ## http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx
@@ -61,6 +62,11 @@ popn_long$population <- as.numeric(popn_long$population)
 ## format long table entries
 popn_long$year <- gsub("X", "", popn_long$year)
 popn_long$year <- gsub(".x", "", popn_long$year)
+
+## prepare dataframe for interactive dygraph
+dy_plot <- popn_long[, c("Name.x", "year", "population")]
+dy_plot$year <- as.numeric(dy_plot$year)
+dy_plot <- spread(dy_plot, Name.x, value = population)
 
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
 for (i in 1:length(popn_long$SGC)) {

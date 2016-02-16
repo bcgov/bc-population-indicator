@@ -18,6 +18,7 @@ library(raster) #for interesect and aggregate functions
 library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
 library(envreportutils) #soe theme
 library(ggplot2) #for plotting
+library(dygraphs) #for interactive chart plot
 library(RColorBrewer) #for colour palette
 
 # ## preparing census subdivision shapefiles from Statistics Canada
@@ -46,7 +47,7 @@ pal <- brewer.pal(7, "BrBG")[1:6]
 popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
   geom_path() +
   geom_polygon() +
-  scale_fill_manual(colours = rev(pal), 
+  scale_fill_gradientn(colours = rev(pal),
                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
   facet_wrap(~year, ncol = 5) +
   theme_minimal() +
@@ -56,3 +57,8 @@ popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill =
         legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(popn_plot)
+
+
+## plotting dygraph
+dygraph(dy_plot)
+
