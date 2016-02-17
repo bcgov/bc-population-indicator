@@ -18,12 +18,10 @@ library(rgdal) #for reading shapefile
 ## Tabular data files publically available from BC Stats on-line: 
 ## http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx
 ## [license: BC Crown Copyright]
-## Files located under Municipalities, Regional Districts & Development Regions section,
-## converted .xls files into machine-readable .csv files.
+## Files located under Municipalities, Regional Districts & Development Regions section
 
 ## loading population data of 2001-05 and 2011-15
-popn01 <- read.csv("Z:/sustainability/population/BC_RD_popn2001-2011.csv", stringsAsFactors = FALSE)
-popn11 <- read.csv("Z:/sustainability/population/BC_RD_popn2011-2015.csv", stringsAsFactors = FALSE)
+popn <- read.csv("Z:/sustainability/population/Population_Estimates.csv", stringsAsFactors = FALSE)
 
 ## BC Census Division spatial data publically available from Statistics Canada on-line:
 ## 2011 Statistics Canada Census - Boundary files: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm
@@ -37,46 +35,30 @@ cd <- readOGR(dsn = "Z:/sustainability/population/shapefile", layer = "gcd_000b1
 ## extract shape for BC only
 cd<- cd[cd$PRUID =="59", ] 
 
-## merge 01 and 11 dataframes
-popn <- left_join(popn01, popn11, by = "SGC") 
  
 ## clean dataframe 
-popn <-  popn %>% 
-  filter(popn$Area.Type.x == "RD" | popn$Area.Type.x == "R") %>% 
-  select(-Area.Type.x, -Area.Type.y, -Name.y, -X2011.y)
+popn_bc <- popn %>% 
+  filter(Regional.District == "British Columbia") %>% 
+  select(Year, Total)
 
-## substitute "na" characters to NA
-popn[popn == "na"] <- NA
+popn_rd <- popn %>% 
+  filter(Regional.District != "British Columbia") %>% 
+  select(SGC, Regional.District, Year, Total)
 
-## format name
-popn$Name.x <- gsub("\\(See Notes)", "", popn$Name.x)
-popn$Name.x <- gsub("     ", "", popn$Name.x) 
-
-
-## create long data table for plotting
-popn_long <- melt(popn, id.vars = c("Name.x", "SGC"), variable.name = "year", value.name = "population")
-
-## convert characters to numeric values
-popn_long$population <- as.numeric(popn_long$population)
-
-## format long table entries
-popn_long$year <- gsub("X", "", popn_long$year)
-popn_long$year <- gsub(".x", "", popn_long$year)
-
-## prepare dataframe for interactive dygraph
-dy_plot <- popn_long[, c("Name.x", "year", "population")]
-dy_plot$year <- as.numeric(dy_plot$year)
-dy_plot <- spread(dy_plot, Name.x, value = population)
+# prepare dataframe for interactive dygraph
+dy_plot_bc <- popn_bc
+dy_plot_rd <- select(popn_rd, -SGC)
+dy_plot_rd <- spread(dy_plot_rd, Regional.District, value = Total)
 
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
-for (i in 1:length(popn_long$SGC)) {
-  if (nchar(popn_long$SGC[i]) == 4) {
-    popn_long$SGC[i] <- sub("^", "590", popn_long$SGC[i])
+for (i in 1:length(popn_rd$SGC)) {
+  if (nchar(popn_rd$SGC[i]) == 4) {
+    popn_rd$SGC[i] <- sub("^", "590", popn_rd$SGC[i])
   }
   else {
-    popn_long$SGC[i] <- sub("^", "59", popn_long$SGC[i])
+    popn_rd$SGC[i] <- sub("^", "59", popn_rd$SGC[i])
   }
-  popn_long$SGC[i] <- substr(popn_long$SGC[i], 0, 4)
+  popn_rd$SGC[i] <- substr(popn_rd$SGC[i], 0, 4)
 }
 
 
@@ -86,7 +68,7 @@ pct <- function(x) {
   (lag(x)-x)/x*100
 }
 
-popn_long <- popn_long %>% 
-  group_by(Name.x) %>% 
-  mutate_each(funs(pct), population) %>% 
-  filter(year != 2001)
+popn_rd <- popn_rd %>% 
+  group_by(Regional.District) %>% 
+  mutate_each(funs(pct), Total) %>% 
+  filter(Year != 1986)
