@@ -37,19 +37,19 @@ cd <- aggregate(cd, by = "CDUID")
 cd_plot <- fortify(cd, region = "CDUID")
 
 ## joining tabular and spatial data after c
-cd_plot <- left_join(cd_plot, popn_long, by = c("id" = "SGC"))
+cd_plot <- left_join(cd_plot, popn_rd, by = c("id" = "SGC"))
 
 
 ## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
-pal <- brewer.pal(7, "BrBG")[1:6]
+pal <- brewer.pal(9, "BrBG")[1:6]
 
 ## plotting
-popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = population)) +
+popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
   geom_path() +
   geom_polygon() +
   scale_fill_gradientn(colours = rev(pal),
                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-  facet_wrap(~year, ncol = 5) +
+  facet_wrap(~Year, ncol = 5) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
@@ -60,5 +60,5 @@ plot(popn_plot)
 
 
 ## plotting dygraph
-dygraph(dy_plot)
-
+dygraph(dy_plot_bc)
+dygraph(dy_plot_rd)
