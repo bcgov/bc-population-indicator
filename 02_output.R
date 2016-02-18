@@ -60,5 +60,5 @@ plot(popn_plot)
 
 
 ## plotting dygraph
-dygraph(dy_plot_bc)
-dygraph(dy_plot_rd)
+dygraph(dy_plot_bc, main = "Population Change in British Columbia")
+dygraph(dy_plot_rd, main = "Population Change by Regional District")
