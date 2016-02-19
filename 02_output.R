@@ -19,7 +19,8 @@ library(rmapshaper) #simplifying the district boundaries; package & details on G
 library(envreportutils) #soe theme
 library(ggplot2) #for plotting
 library(dygraphs) #for interactive chart plot
-library(RColorBrewer) #for colour palette
+# library(RColorBrewer) #for colour palette
+library(leaflet) ## for interactive map
 
 
 ## simplifying the polygons in shapefile
@@ -59,6 +60,15 @@ pt_plot <- ggplot(data = cd_plot) +
           legend.title = element_text(size = 11, face = "bold"),
           text = element_text(family = "Verdana"))
 plot(pt_plot)
+
+## plotting leaflet map
+# trying only for year 2015
+popn_lflt <- popn_pt %>% 
+  filter(popn_pt$Year == 2015)
+
+leaflet(popn_lflt) %>% addTiles() %>% 
+  addCircles(lng = ~coord.1, lat = ~coord.2, radius = ~sqrt(Total)*30, popup = ~Regional.District & ~Total)
+
 
 ## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
 # pal <- brewer.pal(9, "BrBG")[1:6]
