@@ -62,31 +62,40 @@ pt_plot <- ggplot(data = cd_plot) +
 plot(pt_plot)
 
 ## plotting leaflet map
+
+## add popup function
+popup_fun <- function(rd, population) {
+  html_top <- paste0("<h3>", rd, "</h3>")
+  html <- paste0(html_top, "<p><strong>2015 Population: </strong>", population, "</p>")
+  html
+}
+
 # trying only for year 2015
 popn_lflt <- popn_pt %>% 
   filter(popn_pt$Year == 2015)
 
 leaflet(popn_lflt) %>% addTiles() %>% 
-  addCircles(lng = ~coord.1, lat = ~coord.2, radius = ~sqrt(Total)*30, popup = ~Regional.District & ~Total)
+  addCircles(lng = ~coord.1, lat = ~coord.2, radius = ~sqrt(Total)*30, 
+             popup = ~popup_fun(rd = Regional.District, population = Total))
 
 
 ## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
-# pal <- brewer.pal(9, "BrBG")[1:6]
+pal <- brewer.pal(9, "BrBG")[1:6]
 
 ## plotting chloropleth
-# popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
-#   geom_path() +
-#   geom_polygon() +
-#   scale_fill_gradientn(colours = rev(pal),
-#                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-#   facet_wrap(~Year, ncol = 5) +
-#   theme_minimal() +
-#   theme(axis.title = element_blank(),
-#         axis.text = element_blank(),
-#         panel.grid = element_blank(),
-#         legend.title = element_text(size = 11, face = "bold"),
-#         text = element_text(family = "Verdana"))
-# plot(popn_plot)
+popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
+  geom_path() +
+  geom_polygon() +
+  scale_fill_gradientn(colours = rev(pal),
+                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+  facet_wrap(~Year, ncol = 5) +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"))
+plot(popn_plot)
 
 
 ## plotting dygraph
