@@ -61,14 +61,19 @@ for (i in 1:length(popn_rd$SGC)) {
   popn_rd$SGC[i] <- substr(popn_rd$SGC[i], 0, 4)
 }
 
+## join coordinates to tabular data from shapefile
+df <- data.frame(SGC = cd$CDUID, coord = coordinates(cd))
+df$SGC <- as.character(df$SGC)
+popn_rd <- left_join(popn_rd, df, by = c("SGC" = "SGC"))
+
 
 ## calculate annual change in population
 ## create a function to calculate percentage
-pct <- function(x) {
-  (lag(x)-x)/x*100
-}
-
-popn_rd <- popn_rd %>% 
-  group_by(Regional.District) %>% 
-  mutate_each(funs(pct), Total) %>% 
-  filter(Year != 1986)
+# pct <- function(x) {
+#   (lag(x)-x)/x*100
+# }
+# 
+# popn_pct <- popn_rd %>% 
+#   group_by(Regional.District) %>% 
+#   mutate_each(funs(pct), Total) %>% 
+#   filter(Year != 1986)

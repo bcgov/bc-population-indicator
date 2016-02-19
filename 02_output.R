@@ -21,13 +21,8 @@ library(ggplot2) #for plotting
 library(dygraphs) #for interactive chart plot
 library(RColorBrewer) #for colour palette
 
-# ## preparing census subdivision shapefiles from Statistics Canada
-# csd <- readOGR(dsn = "data", layer = "gcsd000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
-# 
-# # ## extract shape for BC only
-# csd <- csd[csd$PRUID == "59", ]
 
-## Simplify the polygons in shapefile
+## simplifying the polygons in shapefile
 cd <- ms_simplify(cd, keep = 0.01, keep_shapes = TRUE, explode = TRUE)
 
 ## aggregating small polygons
@@ -39,24 +34,49 @@ cd_plot <- fortify(cd, region = "CDUID")
 ## joining tabular and spatial data after c
 cd_plot <- left_join(cd_plot, popn_rd, by = c("id" = "SGC"))
 
+## assigning the columns for coordinates
+coordinates(popn_rd) <- ~coord.1 + coord.2
 
-## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
-pal <- brewer.pal(9, "BrBG")[1:6]
+## defining projection system
+proj4string(popn_rd) <- CRS("+init=epsg:4617")
 
-## plotting
-popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
-  geom_path() +
-  geom_polygon() +
-  scale_fill_gradientn(colours = rev(pal),
-                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+## joining with spatial polygons
+popn_pt <- spTransform(popn_rd, CRS(proj4string(cd)))
+popn_pt <- as.data.frame(popn_pt, stringsAsFactors=FALSE)
+
+
+## plotting points
+pt_plot <- ggplot(data = cd_plot) +
+  geom_polygon(aes(long, lat, group = group), fill = "grey20") +
+  geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
+  geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.6, 
+             colour = "#ffd24d") +
   facet_wrap(~Year, ncol = 5) +
   theme_minimal() +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana"))
-plot(popn_plot)
+    theme(axis.title = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank(),
+          legend.title = element_text(size = 11, face = "bold"),
+          text = element_text(family = "Verdana"))
+plot(pt_plot)
+
+## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
+# pal <- brewer.pal(9, "BrBG")[1:6]
+
+## plotting chloropleth
+# popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
+#   geom_path() +
+#   geom_polygon() +
+#   scale_fill_gradientn(colours = rev(pal),
+#                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+#   facet_wrap(~Year, ncol = 5) +
+#   theme_minimal() +
+#   theme(axis.title = element_blank(),
+#         axis.text = element_blank(),
+#         panel.grid = element_blank(),
+#         legend.title = element_text(size = 11, face = "bold"),
+#         text = element_text(family = "Verdana"))
+# plot(popn_plot)
 
 
 ## plotting dygraph
