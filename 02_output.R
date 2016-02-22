@@ -19,7 +19,7 @@ library(rmapshaper) #simplifying the district boundaries; package & details on G
 library(envreportutils) #soe theme
 library(ggplot2) #for plotting
 library(dygraphs) #for interactive chart plot
-# library(RColorBrewer) #for colour palette
+library(RColorBrewer) #for colour palette
 library(leaflet) ## for interactive map
 
 
@@ -33,7 +33,7 @@ cd <- aggregate(cd, by = "CDUID")
 cd_plot <- fortify(cd, region = "CDUID")
 
 ## joining tabular and spatial data after c
-cd_plot <- left_join(cd_plot, popn_rd, by = c("id" = "SGC"))
+cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
 ## assigning the columns for coordinates
 coordinates(popn_rd) <- ~coord.1 + coord.2
@@ -52,7 +52,6 @@ pt_plot <- ggplot(data = cd_plot) +
   geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
   geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.6, 
              colour = "#ffd24d") +
-  facet_wrap(~Year, ncol = 5) +
   theme_minimal() +
     theme(axis.title = element_blank(),
           axis.text = element_blank(),
@@ -60,23 +59,6 @@ pt_plot <- ggplot(data = cd_plot) +
           legend.title = element_text(size = 11, face = "bold"),
           text = element_text(family = "Verdana"))
 plot(pt_plot)
-
-## plotting leaflet map
-
-## add popup function
-popup_fun <- function(rd, population) {
-  html_top <- paste0("<h3>", rd, "</h3>")
-  html <- paste0(html_top, "<p><strong>2015 Population: </strong>", population, "</p>")
-  html
-}
-
-# trying only for year 2015
-popn_lflt <- popn_pt %>% 
-  filter(popn_pt$Year == 2015)
-
-leaflet(popn_lflt) %>% addTiles() %>% 
-  addCircles(lng = ~coord.1, lat = ~coord.2, radius = ~sqrt(Total)*30, 
-             popup = ~popup_fun(rd = Regional.District, population = Total))
 
 
 ## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
@@ -88,7 +70,6 @@ popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill =
   geom_polygon() +
   scale_fill_gradientn(colours = rev(pal),
                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-  facet_wrap(~Year, ncol = 5) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
@@ -100,4 +81,4 @@ plot(popn_plot)
 
 ## plotting dygraph
 dygraph(dy_plot_bc, main = "Population Change in British Columbia")
-dygraph(dy_plot_rd, main = "Population Change by Regional District")
+# dygraph(dy_plot_rd, main = "Population Change by Regional District")
