@@ -22,6 +22,7 @@ library(rgdal) #for reading shapefile
 
 ## loading population data of 2001-05 and 2011-15
 popn <- read.csv("Z:/sustainability/population/Population_Estimates.csv", stringsAsFactors = FALSE)
+popn_bc <- read.csv("Z:/sustainability//population/BC_annual_population_estimates.csv", stringsAsFactors = FALSE)
 
 ## BC Census Division spatial data publically available from Statistics Canada on-line:
 ## 2011 Statistics Canada Census - Boundary files: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm
@@ -37,18 +38,14 @@ cd<- cd[cd$PRUID =="59", ]
 
  
 ## clean dataframe 
-popn_bc <- popn %>% 
-  filter(Regional.District == "British Columbia") %>% 
-  select(Year, Total)
-
 popn_rd <- popn %>% 
   filter(Regional.District != "British Columbia") %>% 
   select(SGC, Regional.District, Year, Total)
 
 # prepare dataframe for interactive dygraph
 dy_plot_bc <- popn_bc
-dy_plot_rd <- select(popn_rd, -SGC)
-dy_plot_rd <- spread(dy_plot_rd, Regional.District, value = Total)
+# dy_plot_rd <- select(popn_rd, -SGC)
+# dy_plot_rd <- spread(dy_plot_rd, Regional.District, value = Total)
 
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
 for (i in 1:length(popn_rd$SGC)) {
@@ -61,19 +58,19 @@ for (i in 1:length(popn_rd$SGC)) {
   popn_rd$SGC[i] <- substr(popn_rd$SGC[i], 0, 4)
 }
 
-## join coordinates to tabular data from shapefile
+## calculate annual change in population
+## create a function to calculate percentage
+pct <- function(x) {
+  (x-lag(x))/lag(x)*100
+}
+
+popn_pct <- popn_rd %>% 
+  filter(Year == 1986 | Year == 2015) %>% 
+  group_by(Regional.District) %>% 
+  mutate_each(funs(pct), Total) %>%
+  filter(Year != 1986)
+  
+## join coordinates to tabular data from shapefile for point plot
 df <- data.frame(SGC = cd$CDUID, coord = coordinates(cd))
 df$SGC <- as.character(df$SGC)
 popn_rd <- left_join(popn_rd, df, by = c("SGC" = "SGC"))
-
-
-## calculate annual change in population
-## create a function to calculate percentage
-# pct <- function(x) {
-#   (lag(x)-x)/x*100
-# }
-# 
-# popn_pct <- popn_rd %>% 
-#   group_by(Regional.District) %>% 
-#   mutate_each(funs(pct), Total) %>% 
-#   filter(Year != 1986)
