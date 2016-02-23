@@ -35,15 +35,45 @@ cd_plot <- fortify(cd, region = "CDUID")
 ## joining tabular and spatial data after c
 cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
-## assigning the columns for coordinates
-coordinates(popn_rd) <- ~coord.1 + coord.2
+# ## assigning the columns for coordinates
+# coordinates(popn_pt) <- ~coord.1 + coord.2
+# 
+# ## defining projection system
+# proj4string(popn_pt) <- CRS("+init=epsg:4617")
+# 
+# ## joining with spatial polygons
+# popn_pt <- spTransform(popn_pt, CRS(proj4string(cd)))
+# popn_pt <- as.data.frame(popn_pt, stringsAsFactors=FALSE)
 
-## defining projection system
-proj4string(popn_rd) <- CRS("+init=epsg:4617")
 
-## joining with spatial polygons
-popn_pt <- spTransform(popn_rd, CRS(proj4string(cd)))
-popn_pt <- as.data.frame(popn_pt, stringsAsFactors=FALSE)
+## ploting long-term BC population line graph
+bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = Population)) +
+  geom_line() +
+  theme_minimal() +
+  theme(legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana")) +
+  theme_soe() 
+plot(bc_plot)
+
+
+## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
+pal <- brewer.pal(9, "BrBG")[1:8]
+
+## plotting chloropleth
+rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
+  geom_path() +
+  geom_polygon() +
+  # scale_fill_manual(values = pal, breaks = levels(cd_plot$Total)) +
+  scale_fill_gradientn(colours = rev(pal),
+                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+  facet_wrap(~Year) +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"))
+plot(rd_plot)
 
 
 ## plotting points
@@ -59,24 +89,6 @@ pt_plot <- ggplot(data = cd_plot) +
           legend.title = element_text(size = 11, face = "bold"),
           text = element_text(family = "Verdana"))
 plot(pt_plot)
-
-
-## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
-pal <- brewer.pal(9, "BrBG")[1:6]
-
-## plotting chloropleth
-popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
-  geom_path() +
-  geom_polygon() +
-  scale_fill_gradientn(colours = rev(pal),
-                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-  theme_minimal() +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana"))
-plot(popn_plot)
 
 
 ## plotting dygraph
