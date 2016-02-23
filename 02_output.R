@@ -56,10 +56,25 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = Population)) +
 plot(bc_plot)
 
 
+## plotting regional district facet graph
+rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = Total)) +
+  geom_line(show.legend = FALSE, size = 1) +
+  scale_x_continuous(breaks = seq(1987, 2015, 4), expand=c(0,0)) +
+  labs(ylab("Population")) +
+  facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
+  theme_soe_facet() +
+  theme(legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"),
+        legend.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, size = 6, vjust = 0.5),
+        axis.text = element_text(size = 8)) 
+plot(rd_facet)
+
+
+## plotting chloropleth
 ## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
 pal <- brewer.pal(9, "BrBG")[1:8]
 
-## plotting chloropleth
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
   geom_path() +
   geom_polygon() +
