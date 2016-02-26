@@ -82,6 +82,16 @@ plot(rd_facet)
 
 
 ## plotting chloropleth
+
+## change facet label name
+yr_interval <- list(
+  "1994" <- "1986 to 1994"
+  "2001" <- "1994 to 2001"
+  ""
+  
+)
+yr_labeller <- function()
+
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = category)) +
   geom_polygon() +
   geom_path() +
