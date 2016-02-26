@@ -65,10 +65,10 @@ pct <- function(x) {
 }
 
 popn_pct <- popn_rd %>% 
-  filter(Year == 1987 | Year == 1994 | Year == 2001 | Year == 2008 | Year == 2015) %>% 
+  filter(Year == 1986 | Year == 1994 | Year == 2001 | Year == 2008 | Year == 2015) %>% 
   group_by(Regional.District) %>% 
   mutate_each(funs(pct), Total) %>%
-  filter(Year != 1987)
+  filter(Year != 1986)
   
 ## join coordinates to tabular data from shapefile for point plot
 df <- data.frame(SGC = cd$CDUID, coord = coordinates(cd))
