@@ -61,7 +61,7 @@ for (i in 1:length(popn_rd$SGC)) {
 ## calculate annual change in population
 ## create a function to calculate percentage
 pct <- function(x) {
-  (x-lag(x))/lag(x)*100
+  round((x-lag(x))/lag(x)*100, 0)
 }
 
 popn_pct <- popn_rd %>% 
