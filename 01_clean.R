@@ -47,11 +47,6 @@ popn_rd <- popn %>%
   filter(Regional.District != "British Columbia") %>% 
   select(SGC, Regional.District, Year, Total)
 
-# prepare dataframe for interactive dygraph
-dy_plot_bc <- popn_bc
-# dy_plot_rd <- select(popn_rd, -SGC)
-# dy_plot_rd <- spread(dy_plot_rd, Regional.District, value = Total)
-
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
 for (i in 1:length(popn_rd$SGC)) {
   if (nchar(popn_rd$SGC[i]) == 4) {

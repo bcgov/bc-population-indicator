@@ -126,7 +126,3 @@ pt_plot <- ggplot(data = cd_plot) +
           text = element_text(family = "Verdana"))
 plot(pt_plot)
 
-
-## plotting dygraph
-dygraph(dy_plot_bc, main = "Population Change in British Columbia")
-# dygraph(dy_plot_rd, main = "Population Change by Regional District")
