@@ -37,7 +37,12 @@ cd <- readOGR(dsn = "Z:/sustainability/population/shapefile", layer = "gcd_000b1
 cd<- cd[cd$PRUID =="59", ] 
 
  
-## clean dataframe 
+## format population values in BC dataframe
+popn_bc <- popn_bc %>% 
+  mutate(popn_million = round(Population/1000000, 2))
+
+
+## clean regional district dataframe 
 popn_rd <- popn %>% 
   filter(Regional.District != "British Columbia") %>% 
   select(SGC, Regional.District, Year, Total)
