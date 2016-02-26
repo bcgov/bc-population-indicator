@@ -20,7 +20,6 @@ library(envreportutils) #soe theme
 library(ggplot2) #for plotting
 library(dygraphs) #for interactive chart plot
 library(RColorBrewer) #for colour palette
-library(leaflet) ## for interactive map
 
 
 ## simplifying the polygons in shapefile
@@ -32,7 +31,18 @@ cd <- aggregate(cd, by = "CDUID")
 ## converting spatial file to dataframe
 cd_plot <- fortify(cd, region = "CDUID")
 
-## joining tabular and spatial data after c
+## categorise change and add Color Brewer (http://colorbrewer2.org/) palette:
+scale_colours <- c("#01665e", "#35978f", "#80cdc1", "#dfc27d", "#bf812d", "#8c510a")
+names(scale_colours) <- c("-41 to -28", "-27 to -14", "-13 to 0", "1 to 14", "15 - 28", "29 - 42")
+
+## creating scale breaks for map plot
+popn_pct$category <- cut(popn_pct$Total,
+                         breaks = c(-Inf, -28, -14, 0, 14, 28, 42),
+                         labels = names(scale_colours),
+                         include.lowest = FALSE, right = TRUE, ordered_result = TRUE)
+popn_pct$colour_code <- scale_colours[popn_pct$category]
+
+## joining tabular and spatial data
 cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
 # ## assigning the columns for coordinates
@@ -72,15 +82,13 @@ plot(rd_facet)
 
 
 ## plotting chloropleth
-## creating a Color Brewer (http://colorbrewer2.org/) palette for plotting
-pal <- brewer.pal(9, "BrBG")[1:8]
-
-rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
-  geom_path() +
+rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = category)) +
   geom_polygon() +
-  # scale_fill_manual(values = pal, breaks = levels(cd_plot$Total)) +
-  scale_fill_gradientn(colours = rev(pal),
-                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+  geom_path() +
+  scale_fill_manual(values = scale_colours, drop = FALSE,
+                    guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
+  # scale_fill_gradientn(colours = rev(pal),
+  #                      guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
   facet_wrap(~Year) +
   theme_minimal() +
   theme(axis.title = element_blank(),
