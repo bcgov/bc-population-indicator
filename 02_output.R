@@ -57,12 +57,15 @@ cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
 
 ## ploting long-term BC population line graph
-bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = Population)) +
-  geom_line() +
-  theme_minimal() +
+bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
+  geom_line(colour = "#35978f", size = 2) +
+  ylab("B.C. Population(Million)") +
+  scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15)) +
+  scale_y_continuous(limits = c(0, 5)) +
+  theme_soe() +
   theme(legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana")) +
-  theme_soe() 
+        panel.grid = element_blank(),
+        text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
 
@@ -84,13 +87,13 @@ plot(rd_facet)
 ## plotting chloropleth
 
 ## change facet label name
-yr_interval <- list(
-  "1994" <- "1986 to 1994"
-  "2001" <- "1994 to 2001"
-  ""
-  
-)
-yr_labeller <- function()
+# yr_interval <- list(
+#   "1994" <- "1986 to 1994"
+#   "2001" <- "1994 to 2001"
+#   ""
+#   
+# )
+# yr_labeller <- function()
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = category)) +
   geom_polygon() +
