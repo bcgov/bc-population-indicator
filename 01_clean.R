@@ -64,10 +64,14 @@ pct <- function(x) {
   round((x-lag(x))/lag(x)*100, 0)
 }
 
+## for not overwriting the column to which the function is applied
+vars <- names(popn_rd["Total"])
+vars <- setNames(vars, paste0(vars, "_change"))
+
 popn_pct <- popn_rd %>% 
-  filter(Year == 1986 | Year == 1994 | Year == 2001 | Year == 2008 | Year == 2015) %>% 
+  filter(Year == 1986 | Year == 2015) %>% 
   group_by(Regional.District) %>% 
-  mutate_each(funs(pct), Total) %>%
+  mutate_each_(funs(pct), vars) %>%
   filter(Year != 1986)
   
 ## join coordinates to tabular data from shapefile for point plot
