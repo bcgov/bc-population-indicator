@@ -41,11 +41,13 @@ cd<- cd[cd$PRUID =="59", ]
 popn_bc <- popn_bc %>% 
   mutate(popn_million = round(Population/1000000, 2))
 
-
 ## clean regional district dataframe 
 popn_rd <- popn %>% 
   filter(Regional.District != "British Columbia") %>% 
   select(SGC, Regional.District, Year, Total)
+
+## ordering regional districts based on average population size for facet plot
+popn_rd <- order_df(popn_rd, "Regional.District", "Total", mean, desc = TRUE)
 
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
 for (i in 1:length(popn_rd$SGC)) {
