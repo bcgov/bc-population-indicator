@@ -107,9 +107,9 @@ plot(rd_plot)
 
 
 ## 2015 population plot
-popn_plot15 <- ggplot(data = plot_15, aes(x = long, y = lat, group = group, fill = Total)) +
-  geom_path() +
+popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
   geom_polygon() +
+  geom_path() +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
