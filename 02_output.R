@@ -32,11 +32,11 @@ cd <- aggregate(cd, by = "CDUID")
 cd_plot <- fortify(cd, region = "CDUID")
 
 ## categorise change and add Color Brewer (http://colorbrewer2.org/) palette:
-scale_colours <- c("#01665e", "#35978f", "#80cdc1", "#dfc27d", "#bf812d", "#8c510a")
-names(scale_colours) <- c("-41 to -28", "-27 to -14", "-13 to 0", "1 to 14", "15 - 28", "29 - 42")
+# scale_colours <- c("#01665e", "#35978f", "#80cdc1", "#dfc27d", "#bf812d", "#8c510a")
+# names(scale_colours) <- c("-41 to -28", "-27 to -14", "-13 to 0", "1 to 14", "15 - 28", "29 - 42")
 
 ## creating scale breaks for map plot
-popn_pct$category <- cut(popn_pct$Total,
+popn_pct$category <- cut(popn_pct$Total_change,
                          breaks = c(-Inf, -28, -14, 0, 14, 28, 42),
                          labels = names(scale_colours),
                          include.lowest = FALSE, right = TRUE, ordered_result = TRUE)
@@ -44,6 +44,7 @@ popn_pct$colour_code <- scale_colours[popn_pct$category]
 
 ## joining tabular and spatial data
 cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
+
 
 # ## assigning the columns for coordinates
 # coordinates(popn_pt) <- ~coord.1 + coord.2
@@ -58,12 +59,13 @@ cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
 ## ploting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
-  geom_line(colour = "#35978f", size = 2) +
+  geom_line(colour = "#bc3812", size = 1.5) +
   ylab("B.C. Population(Million)") +
   scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15)) +
   scale_y_continuous(limits = c(0, 5)) +
   theme_soe() +
   theme(legend.title = element_text(size = 11, face = "bold"),
+        axis.title.y = element_text(face = "bold"),
         panel.grid = element_blank(),
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
@@ -71,9 +73,9 @@ plot(bc_plot)
 
 ## plotting regional district facet graph
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = Total)) +
-  geom_line(show.legend = FALSE, size = 1) +
+  geom_line(show.legend = FALSE, colour = "#bc3812", size = 1) +
   scale_x_continuous(breaks = seq(1987, 2015, 4), expand=c(0,0)) +
-  labs(ylab("Population")) +
+  labs(ylab("")) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
   theme_soe_facet() +
   theme(legend.title = element_text(size = 11, face = "bold"),
@@ -85,24 +87,16 @@ plot(rd_facet)
 
 
 ## plotting chloropleth
+## creating a colour brewer palette from http://colorbrewer2.org/
+pal <- brewer.pal(9, "BrBG")[1:7]
 
-## change facet label name
-# yr_interval <- list(
-#   "1994" <- "1986 to 1994"
-#   "2001" <- "1994 to 2001"
-#   ""
-#   
-# )
-# yr_labeller <- function()
-
-rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = category)) +
+rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
   geom_polygon() +
   geom_path() +
-  scale_fill_manual(values = scale_colours, drop = FALSE,
-                    guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
-  # scale_fill_gradientn(colours = rev(pal),
-  #                      guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-  facet_wrap(~Year) +
+  # scale_fill_manual(values = scale_colours, drop = FALSE,
+  #                   guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
+  scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal),
+                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
@@ -110,6 +104,19 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = c
         legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
+
+
+## 2015 population plot
+popn_plot15 <- ggplot(data = plot_15, aes(x = long, y = lat, group = group, fill = Total)) +
+  geom_path() +
+  geom_polygon() +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"))
+plot(popn_plot15)
 
 
 ## plotting points
