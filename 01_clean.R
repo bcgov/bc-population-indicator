@@ -14,6 +14,7 @@ library(dplyr) #data munging
 library(tidyr) #for reformatting dataframes
 library(reshape2) #format dataframe
 library(rgdal) #for reading shapefile
+library(envreportutils) #for order dataframe function
 
 ## Tabular data files publically available from BC Stats on-line: 
 ## http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx
