@@ -107,15 +107,18 @@ plot(rd_plot)
 
 
 ## chloropleth and points
-pal_cb <- brewer.pal(9, "RdYlBu")[2:6]
+pal_cb <- brewer.pal(9, "RdGy")[4:8]
+# pal_cb <- c("#A98E55", "#C3B087", "#D4C7AA", "white", "#C8D1A2")
   
 combined_plot <- ggplot(data = cd_plot) +
   geom_polygon(aes(long, lat, group = group, fill = Total_change)) +
   geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
-  scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal_cb),
+  scale_fill_gradientn(limits = c(-50, 110), colours = pal_cb,
                        guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
   geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.9, 
-             colour = brewer.pal(9, "RdYlBu")[1]) +
+             # colour = "#CDA59D") +
+             colour = brewer.pal(9, "RdGy")[9]) +
+  labs(size = "Total\nPopulation") +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
