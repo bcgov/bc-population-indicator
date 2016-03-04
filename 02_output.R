@@ -20,6 +20,8 @@ library(envreportutils) #soe theme
 library(ggplot2) #for plotting
 library(dygraphs) #for interactive chart plot
 library(RColorBrewer) #for colour palette
+library(png) #for inserting image to plot
+library(grid) #for creating grid graphic
 
 
 ## simplifying the polygons in shapefile
@@ -45,6 +47,9 @@ cd_plot <- fortify(cd, region = "CDUID")
 ## joining tabular and spatial data
 cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
+## preparing image to insert to BC line graph
+img <- readPNG("img/popn.png")
+g <- rasterGrob(img, interpolate = TRUE)
 
 # ## assigning the columns for coordinates
 # coordinates(popn_pt) <- ~coord.1 + coord.2
@@ -59,8 +64,10 @@ cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
 ## ploting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
-  geom_line(colour = "#bc3812", size = 1.5) +
+  geom_line(colour = "#d6604d", size = 1.5) +
+  xlab("") +
   ylab("B.C. Population(Million)") +
+  annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2, ymax = 4.5) +
   scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15)) +
   scale_y_continuous(limits = c(0, 5)) +
   theme_soe() +
@@ -73,7 +80,7 @@ plot(bc_plot)
 
 ## plotting regional district facet graph
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = Total)) +
-  geom_line(show.legend = FALSE, colour = "#bc3812", size = 1) +
+  geom_line(show.legend = FALSE, colour = "#d6604d", size = 1) +
   scale_x_continuous(breaks = seq(1987, 2015, 4), expand=c(0,0)) +
   labs(ylab("")) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
@@ -84,6 +91,28 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = Total)) +
         axis.text.x = element_text(angle = 45, size = 6, vjust = 0.5),
         axis.text = element_text(size = 8)) 
 plot(rd_facet)
+
+
+## chloropleth and points
+pal_cb <- brewer.pal(9, "RdGy")[4:8]
+# pal_cb <- c("#A98E55", "#C3B087", "#D4C7AA", "white", "#C8D1A2")
+  
+combined_plot <- ggplot(data = cd_plot) +
+  geom_polygon(aes(long, lat, group = group, fill = Total_change)) +
+  geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
+  scale_fill_gradientn(limits = c(-50, 110), colours = pal_cb,
+                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+  geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.85, 
+             # colour = "#CDA59D") +
+             colour = brewer.pal(9, "RdGy")[9]) +
+  labs(size = "Total\nPopulation") +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"))
+plot(combined_plot)
 
 
 ## plotting chloropleth
@@ -104,29 +133,6 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
-
-
-## chloropleth and points
-pal_cb <- brewer.pal(9, "RdGy")[4:8]
-# pal_cb <- c("#A98E55", "#C3B087", "#D4C7AA", "white", "#C8D1A2")
-  
-combined_plot <- ggplot(data = cd_plot) +
-  geom_polygon(aes(long, lat, group = group, fill = Total_change)) +
-  geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
-  scale_fill_gradientn(limits = c(-50, 110), colours = pal_cb,
-                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-  geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.9, 
-             # colour = "#CDA59D") +
-             colour = brewer.pal(9, "RdGy")[9]) +
-  labs(size = "Total\nPopulation") +
-  theme_minimal() +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana"))
-plot(combined_plot)
-
 
 
 ## plotting points
