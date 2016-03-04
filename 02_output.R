@@ -77,6 +77,12 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
+ggsave("./out/test.png", plot = bc_plot, type = "cairo-png", 
+       width = 8.36, height = 6.50, units="in", dpi=100)
+
+png("./out/test3.png", width = 836, height = 650, units="px")
+plot(bc_plot)
+dev.off()
 
 ## plotting regional district facet graph
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = Total)) +
