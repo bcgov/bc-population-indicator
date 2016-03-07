@@ -47,9 +47,6 @@ cd_plot <- fortify(cd, region = "CDUID")
 ## joining tabular and spatial data
 cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
 
-## preparing image to insert to BC line graph
-img <- readPNG("img/popn.png")
-g <- rasterGrob(img, interpolate = TRUE)
 
 # ## assigning the columns for coordinates
 # coordinates(popn_pt) <- ~coord.1 + coord.2
@@ -61,6 +58,10 @@ g <- rasterGrob(img, interpolate = TRUE)
 # popn_pt <- spTransform(popn_pt, CRS(proj4string(cd)))
 # popn_pt <- as.data.frame(popn_pt, stringsAsFactors=FALSE)
 
+
+## preparing image to insert to BC line graph
+img <- readPNG("img/popn.png")
+g <- rasterGrob(img, interpolate = TRUE)
 
 ## ploting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
@@ -85,19 +86,25 @@ plot(bc_plot)
 dev.off()
 
 ## plotting regional district facet graph
-rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = Total)) +
+rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   geom_line(show.legend = FALSE, colour = "#d6604d", size = 1) +
-  scale_x_continuous(breaks = seq(1987, 2015, 4), expand=c(0,0)) +
-  labs(ylab("")) +
+  scale_x_continuous(breaks = seq(1991, 2015, 8), expand=c(0,0)) +
+  labs(ylab("Population (*1000)")) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
+  annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2, ymax = 4.5) +
   theme_soe_facet() +
-  theme(legend.title = element_text(size = 11, face = "bold"),
+  theme(panel.grid = element_blank(),
+        legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"),
         legend.text = element_text(size = 10),
-        axis.text.x = element_text(angle = 45, size = 6, vjust = 0.5),
+        axis.text.x = element_text(hjust = 0.7),
         axis.text = element_text(size = 8)) 
 plot(rd_facet)
 
+# h <- ggplotGrob(rd_facet)
+# h <- gtable_add_grob(h, g, nrow(h)-5, ncol(h)-6)
+# grid.newpage()
+# grid.draw(h)
 
 ## chloropleth and points
 pal_cb <- brewer.pal(9, "RdGy")[4:8]
