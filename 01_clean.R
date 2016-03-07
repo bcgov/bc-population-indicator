@@ -45,7 +45,12 @@ popn_bc <- popn_bc %>%
 ## clean regional district dataframe 
 popn_rd <- popn %>% 
   filter(Regional.District != "British Columbia") %>% 
-  select(SGC, Regional.District, Year, Total)
+  select(SGC, Regional.District, Year, Total) %>% 
+  mutate(popn_thousand = round(Total/1000, 0))
+  
+## format dash signs in dataframe
+popn_rd$Regional.District <- gsub("-", " - ", popn_rd$Regional.District)
+
 
 ## ordering regional districts based on average population size for facet plot
 popn_rd <- order_df(popn_rd, "Regional.District", "Total", mean, desc = TRUE)
