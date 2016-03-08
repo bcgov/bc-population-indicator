@@ -89,7 +89,7 @@ dev.off()
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   geom_line(show.legend = FALSE, colour = "#d6604d", size = 1) +
   scale_x_continuous(breaks = seq(1991, 2015, 8), expand=c(0,0)) +
-  labs(ylab("Population (*1000)")) +
+  labs(xlab(""), ylab("Population (*1000)")) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
   annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2, ymax = 4.5) +
   theme_soe_facet() +
@@ -105,27 +105,6 @@ plot(rd_facet)
 # h <- gtable_add_grob(h, g, nrow(h)-5, ncol(h)-6)
 # grid.newpage()
 # grid.draw(h)
-
-## chloropleth and points
-pal_cb <- brewer.pal(9, "RdGy")[4:8]
-# pal_cb <- c("#A98E55", "#C3B087", "#D4C7AA", "white", "#C8D1A2")
-  
-combined_plot <- ggplot(data = cd_plot) +
-  geom_polygon(aes(long, lat, group = group, fill = Total_change)) +
-  geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
-  scale_fill_gradientn(limits = c(-50, 110), colours = pal_cb,
-                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
-  geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.85, 
-             # colour = "#CDA59D") +
-             colour = brewer.pal(9, "RdGy")[9]) +
-  labs(size = "Total\nPopulation") +
-  theme_minimal() +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana"))
-plot(combined_plot)
 
 
 ## plotting chloropleth
@@ -146,21 +125,6 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
-
-
-## plotting points
-pt_plot <- ggplot(data = cd_plot) +
-  geom_polygon(aes(long, lat, group = group), fill = "grey20") +
-  geom_path(aes(long, lat, group = group), colour = "grey45", size = 0.2) +
-  geom_point(data = popn_pt, aes(coord.1, coord.2, size = Total), alpha = 0.6, 
-             colour = "#ffd24d") +
-  theme_minimal() +
-    theme(axis.title = element_blank(),
-          axis.text = element_blank(),
-          panel.grid = element_blank(),
-          legend.title = element_text(size = 11, face = "bold"),
-          text = element_text(family = "Verdana"))
-plot(pt_plot)
 
 
 ## 2015 population plot
