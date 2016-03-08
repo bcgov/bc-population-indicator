@@ -42,15 +42,15 @@ cd<- cd[cd$PRUID =="59", ]
 popn_bc <- popn_bc %>% 
   mutate(popn_million = round(Population/1000000, 2))
 
+
 ## clean regional district dataframe 
 popn_rd <- popn %>% 
   filter(Regional.District != "British Columbia") %>% 
   select(SGC, Regional.District, Year, Total) %>% 
   mutate(popn_thousand = round(Total/1000, 0))
   
-## format dash signs in dataframe
+## format dash signs in regional district dataframe
 popn_rd$Regional.District <- gsub("-", " - ", popn_rd$Regional.District)
-
 
 ## ordering regional districts based on average population size for facet plot
 popn_rd <- order_df(popn_rd, "Regional.District", "Total", mean, desc = TRUE)
@@ -66,7 +66,8 @@ for (i in 1:length(popn_rd$SGC)) {
   popn_rd$SGC[i] <- substr(popn_rd$SGC[i], 0, 4)
 }
 
-## calculate annual change in population
+
+## calculate total change in population from 1986 to 2015 in regional districts
 ## create a function to calculate percentage
 pct <- function(x) {
   round((x-lag(x))/lag(x)*100, 0)
@@ -76,16 +77,11 @@ pct <- function(x) {
 vars <- names(popn_rd["Total"])
 vars <- setNames(vars, paste0(vars, "_change"))
 
-popn_pct <- popn_rd %>% 
+popn_sum <- popn_rd %>% 
   filter(Year == 1986 | Year == 2015) %>% 
   group_by(Regional.District) %>% 
   mutate_each_(funs(pct), vars) %>%
   filter(Year != 1986)
-  
-## join coordinates to tabular data from shapefile for point plot
-df <- data.frame(SGC = cd$CDUID, coord = coordinates(cd))
-df$SGC <- as.character(df$SGC)
-popn_pt <- left_join(popn_rd, df, by = c("SGC" = "SGC"))
 
-## use only 2015 values
-popn_pt <- filter(popn_pt, Year == 2015)
+## ordering regional districts based on 2015 population
+popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
