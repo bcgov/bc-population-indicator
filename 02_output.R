@@ -45,7 +45,7 @@ cd_plot <- fortify(cd, region = "CDUID")
 # popn_pct$colour_code <- scale_colours[popn_pct$category]
 
 ## joining tabular and spatial data
-cd_plot <- left_join(cd_plot, popn_pct, by = c("id" = "SGC"))
+cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 
 
 # ## assigning the columns for coordinates
@@ -106,6 +106,26 @@ plot(rd_facet)
 # grid.newpage()
 # grid.draw(h)
 
+## plotting barchart for 2015 regional district population
+barchart <- ggplot(data = popn_sum, aes(x = Regional.District, y = Total)) +
+  geom_bar(stat = "identity", position = "identity") +
+  coord_flip() +
+  scale_x_discrete(limits = rev(levels(popn_sum$Regional.District)))
+plot(barchart)
+  
+## 2015 population plot
+pal15 <- brewer.pal(8, "YlOrBr")
+popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
+  geom_polygon() +
+  geom_path() +
+  scale_fill_gradientn(colours = pal15) +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.title = element_text(size = 11, face = "bold"),
+        text = element_text(family = "Verdana"))
+plot(popn_plot15)  
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
@@ -125,19 +145,4 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         legend.title = element_text(size = 11, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
-
-
-## 2015 population plot
-pal15 <- brewer.pal(8, "YlOrBr")
-popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
-  geom_polygon() +
-  geom_path() +
-  scale_fill_gradientn(colours = pal15) +
-  theme_minimal() +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana"))
-plot(popn_plot15)
 
