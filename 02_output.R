@@ -63,9 +63,10 @@ cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 img <- readPNG("img/popn.png")
 g <- rasterGrob(img, interpolate = TRUE)
 
+
 ## ploting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
-  geom_line(colour = "#d6604d", size = 1.5) +
+  geom_line(colour = "#a63603", size = 1.5) +
   xlab("") +
   ylab("B.C. Population(Million)") +
   annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2, ymax = 4.5) +
@@ -78,16 +79,17 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
-ggsave("./out/test.png", plot = bc_plot, type = "cairo-png", 
+ggsave("./out/test1.png", plot = bc_plot, type = "cairo-png", 
        width = 8.36, height = 6.50, units="in", dpi=100)
 
 png("./out/test3.png", width = 836, height = 650, units="px")
 plot(bc_plot)
 dev.off()
 
+
 ## plotting regional district facet graph
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
-  geom_line(show.legend = FALSE, colour = "#d6604d", size = 1) +
+  geom_line(show.legend = FALSE, colour = "#a63603", size = 1) +
   scale_x_continuous(breaks = seq(1991, 2015, 8), expand=c(0,0)) +
   labs(xlab(""), ylab("Population (*1000)")) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
@@ -106,15 +108,24 @@ plot(rd_facet)
 # grid.newpage()
 # grid.draw(h)
 
+
 ## plotting barchart for 2015 regional district population
 barchart <- ggplot(data = popn_sum, aes(x = Regional.District, y = Total)) +
   geom_bar(stat = "identity", position = "identity") +
+  # annotate("text", x = as.character("Alberni - Clayoquot"), y = 1550000, size=4, family = "Verdana"
+  #          label = "There are over\n2.5 million people\nin Greater Vancouver") +
   coord_flip() +
-  scale_x_discrete(limits = rev(levels(popn_sum$Regional.District)))
+  scale_y_continuous(limits = c(0, 2550000), expand = c(0, 0)) +
+  theme_soe() +
+  theme(axis.title = element_blank(),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0, 10, 5, 5), "mm"),
+        text = element_text(family = "Verdana")) 
 plot(barchart)
   
-## 2015 population plot
-pal15 <- brewer.pal(8, "YlOrBr")
+
+## plotting 2015 population map
+pal15 <- brewer.pal(5, "Greys")
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
   geom_polygon() +
   geom_path() +
@@ -127,17 +138,19 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
+
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
-pal <- brewer.pal(9, "BrBG")[1:7]
+# pal <- brewer.pal(9, "BrBG")[1:7]
+pal <- c(brewer.pal(5, "Oranges")[5:1], brewer.pal(3, "Greys"))
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
-  geom_polygon() +
-  geom_path() +
+  geom_polygon(alpha = 0.85) +
+  geom_path(colour = "grey30") +
   # scale_fill_manual(values = scale_colours, drop = FALSE,
   #                   guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
-  scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal),
-                       guide = guide_colourbar(title = "Percent Change\nin BC Population")) +
+  scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal)) +
+  guides(guide_colourbar(title = "Percent Change\nin BC Population")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
