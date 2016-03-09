@@ -66,42 +66,39 @@ g <- rasterGrob(img, interpolate = TRUE)
 
 ## ploting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
-  geom_line(colour = "#a63603", size = 1.5) +
+  geom_line(colour = "#a63603", size = 1.5, alpha = 0.85) +
   xlab("") +
   ylab("B.C. Population(Million)") +
-  annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2, ymax = 4.5) +
-  scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15)) +
-  scale_y_continuous(limits = c(0, 5)) +
+  annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2.3, ymax = 4.8) +
+  scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15), expand = c(0.02, 0)) +
+  scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
-  theme(legend.title = element_text(size = 11, face = "bold"),
-        axis.title.y = element_text(face = "bold"),
-        panel.grid = element_blank(),
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8),
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
-ggsave("./out/test1.png", plot = bc_plot, type = "cairo-png", 
-       width = 8.36, height = 6.50, units="in", dpi=100)
-
-png("./out/test3.png", width = 836, height = 650, units="px")
-plot(bc_plot)
-dev.off()
+ggsave("./out/popn_line.png", plot = bc_plot, type = "cairo-png", 
+       width = 8.4, height = 6.3, units = "in", dpi = 100)
 
 
 ## plotting regional district facet graph
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
-  geom_line(show.legend = FALSE, colour = "#a63603", size = 1) +
+  geom_line(show.legend = FALSE, colour = "#a63603", size = 0.8, alpha = 0.85) +
   scale_x_continuous(breaks = seq(1991, 2015, 8), expand=c(0,0)) +
-  labs(xlab(""), ylab("Population (*1000)")) +
+  labs(xlab("")) +
+  labs(ylab("Population (*1000)")) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
-  annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2, ymax = 4.5) +
   theme_soe_facet() +
   theme(panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
-        text = element_text(family = "Verdana"),
-        legend.text = element_text(size = 10),
-        axis.text.x = element_text(hjust = 0.7),
-        axis.text = element_text(size = 8)) 
+        axis.text.x = element_text(size = 8, hjust = 0.7),
+        axis.text.y = element_text(size = 8),
+        text = element_text(family = "Verdana"))
 plot(rd_facet)
+
+ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
+       width = 8.4, height = 6.3, units = "in", dpi = 100)
 
 # h <- ggplotGrob(rd_facet)
 # h <- gtable_add_grob(h, g, nrow(h)-5, ncol(h)-6)
@@ -120,6 +117,8 @@ barchart <- ggplot(data = popn_sum, aes(x = Regional.District, y = Total)) +
   theme(axis.title = element_blank(),
         panel.grid = element_blank(),
         plot.margin = unit(c(0, 10, 5, 5), "mm"),
+        # axis.text.x = element_text(size = 8),
+        # axis.text.y = element_text(size = 8),
         text = element_text(family = "Verdana")) 
 plot(barchart)
   
@@ -128,29 +127,35 @@ plot(barchart)
 pal15 <- brewer.pal(5, "Greys")
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
   geom_polygon() +
-  geom_path() +
-  scale_fill_gradientn(colours = pal15) +
+  geom_path(size = 0.4) +
+  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
         legend.title = element_text(size = 11, face = "bold"),
+        legend.position = c(0.15, 0.2),
+        plot.margin = unit(c(0, 0, 0, 0), "mm"),
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
+png(filename = "./out/popn_viz.png", width = 930, height = 465, units = "px", type = "cairo-png")
+multiplot(popn_plot15, barchart, cols = 2, widths = c(1, 1.6), heights = c(0.5, 1))
+dev.off()
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
 # pal <- brewer.pal(9, "BrBG")[1:7]
 pal <- c(brewer.pal(5, "Oranges")[5:1], brewer.pal(3, "Greys"))
+# pal <- c("#a63603", "#B25328", "#BE704C", "#CA8D71", "#D7AA95", "#f0f0f0", "#bdbdbd", "#636363")
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
   geom_polygon(alpha = 0.85) +
-  geom_path(colour = "grey30") +
+  geom_path(colour = "grey30", size = 0.4) +
   # scale_fill_manual(values = scale_colours, drop = FALSE,
   #                   guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
-  scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal)) +
-  guides(guide_colourbar(title = "Percent Change\nin BC Population")) +
+  scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal), 
+                       guide = (guide_colourbar(title = "Percent Change\nin Population\n(1986-2015)"))) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
@@ -159,3 +164,5 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         text = element_text(family = "Verdana"))
 plot(rd_plot)
 
+ggsave("./out/popn_pctplot.png", plot = rd_plot, type = "cairo-png",
+       width = 8.4, height = 5.5, units = "in", dpi = 100)
