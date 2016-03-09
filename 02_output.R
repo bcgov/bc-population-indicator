@@ -140,13 +140,12 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
 plot(popn_plot15)  
 
 png(filename = "./out/popn_viz.png", width = 930, height = 465, units = "px", type = "cairo-png")
-multiplot(popn_plot15, barchart, cols = 2, widths = c(1, 1.6), heights = c(0.5, 1))
+multiplot(popn_plot15, barchart, cols = 2, widths = c(1.3, 1))
 dev.off()
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
-# pal <- brewer.pal(9, "BrBG")[1:7]
-pal <- c(brewer.pal(5, "Oranges")[5:1], brewer.pal(3, "Greys"))
+pal <- c(brewer.pal(5, "YlOrBr")[5:1], brewer.pal(3, "Greys"))
 # pal <- c("#a63603", "#B25328", "#BE704C", "#CA8D71", "#D7AA95", "#f0f0f0", "#bdbdbd", "#636363")
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
