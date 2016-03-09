@@ -47,18 +47,6 @@ cd_plot <- fortify(cd, region = "CDUID")
 ## joining tabular and spatial data
 cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 
-
-# ## assigning the columns for coordinates
-# coordinates(popn_pt) <- ~coord.1 + coord.2
-# 
-# ## defining projection system
-# proj4string(popn_pt) <- CRS("+init=epsg:4617")
-# 
-# ## joining with spatial polygons
-# popn_pt <- spTransform(popn_pt, CRS(proj4string(cd)))
-# popn_pt <- as.data.frame(popn_pt, stringsAsFactors=FALSE)
-
-
 ## preparing image to insert to BC line graph
 img <- readPNG("img/popn.png")
 g <- rasterGrob(img, interpolate = TRUE)
@@ -99,11 +87,6 @@ plot(rd_facet)
 
 ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
        width = 8.4, height = 6.3, units = "in", dpi = 100)
-
-# h <- ggplotGrob(rd_facet)
-# h <- gtable_add_grob(h, g, nrow(h)-5, ncol(h)-6)
-# grid.newpage()
-# grid.draw(h)
 
 
 ## plotting barchart for 2015 regional district population
