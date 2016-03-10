@@ -90,16 +90,19 @@ ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
 
 
 ## plotting barchart for 2015 regional district population
-barchart <- ggplot(data = popn_sum, aes(x = Regional.District, y = Total)) +
-  geom_bar(stat = "identity", position = "identity") +
-  # annotate("text", x = as.character("Alberni - Clayoquot"), y = 1550000, size=4, family = "Verdana"
-  #          label = "There are over\n2.5 million people\nin Greater Vancouver") +
-  coord_flip() +
-  scale_y_continuous(limits = c(0, 2550000), expand = c(0, 0)) +
+pal15 <- brewer.pal(5, "YlOrBr")
+
+barchart <- ggplot(data = popn_sum, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", colour = "grey40") +
+  # coord_flip() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015")) +
+  facet_wrap(~grouped, scales = "free_y") +
   theme_soe() +
   theme(axis.title = element_blank(),
         panel.grid = element_blank(),
         plot.margin = unit(c(0, 10, 5, 5), "mm"),
+        legend.title = element_text(size = 11, face = "bold"),
         # axis.text.x = element_text(size = 8),
         # axis.text.y = element_text(size = 8),
         text = element_text(family = "Verdana")) 
@@ -107,9 +110,8 @@ plot(barchart)
   
 
 ## plotting 2015 population map
-pal15 <- brewer.pal(5, "Greys")
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
-  geom_polygon() +
+  geom_polygon(alpha = 0.9) +
   geom_path(size = 0.4) +
   scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015")) +
   theme_minimal() +
@@ -132,7 +134,7 @@ pal <- c(brewer.pal(5, "YlOrBr")[5:1], brewer.pal(3, "Greys"))
 # pal <- c("#a63603", "#B25328", "#BE704C", "#CA8D71", "#D7AA95", "#f0f0f0", "#bdbdbd", "#636363")
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
-  geom_polygon(alpha = 0.85) +
+  geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey30", size = 0.4) +
   # scale_fill_manual(values = scale_colours, drop = FALSE,
   #                   guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
