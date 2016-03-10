@@ -64,11 +64,12 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   theme(panel.grid = element_blank(),
         axis.text.x = element_text(size = 8),
         axis.text.y = element_text(size = 8),
+        axis.title = element_text(size = 12),
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
 ggsave("./out/popn_line.png", plot = bc_plot, type = "cairo-png", 
-       width = 8.4, height = 6.3, units = "in", dpi = 100)
+       width = 7.4, height = 5.3, units = "in", dpi = 100)
 
 
 ## plotting regional district facet graph
@@ -82,11 +83,12 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   theme(panel.grid = element_blank(),
         axis.text.x = element_text(size = 8, hjust = 0.7),
         axis.text.y = element_text(size = 8),
+        axis.title = element_text(size = 12),
         text = element_text(family = "Verdana"))
 plot(rd_facet)
 
 ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
-       width = 8.4, height = 6.3, units = "in", dpi = 100)
+       width = 8.6, height = 6.3, units = "in", dpi = 100)
 
 
 ## plotting 2 barcharts for 2015 Greater Vancouver and other regional districts
@@ -94,61 +96,66 @@ pal15 <- brewer.pal(5, "YlOrBr")
 
 gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
   geom_bar(stat = "identity", position = "identity", fill = brewer.pal(5, "YlOrBr")[5], 
-           colour = "grey40") +
+           colour = "grey30", size = 0.2, alpha = 0.9) +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   scale_fill_gradientn(colours = pal15) +
   theme_soe() +
   theme(axis.title = element_blank(),
+        axis.text = element_text(size = 11),
         panel.grid = element_blank(),
-        # plot.margin = unit(c(0, 10, 5, 21), "mm"),
+        plot.margin = unit(c(0, 15, 15, 21), "mm"),
         legend.position = "none",
         text = element_text(family = "Verdana")) 
 plot(gv_barchart)
 
 rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", colour = "grey40") +
+  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9) +
   coord_flip() +
+  scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
   scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
   theme_soe() +
   theme(axis.title = element_blank(),
+        axis.text = element_text(size = 11),
         panel.grid = element_blank(),
-        # plot.margin = unit(c(0, 10, 5, 5), "mm"),
+        plot.margin = unit(c(10, 15, 5, 5), "mm"),
         legend.position = "none",
         text = element_text(family = "Verdana")) 
 plot(rest_barchart)
 
-png(filename = "./out/barcharts.png", width = 400, height = 470, units = "px", type = "cairo-png")
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.08))
+png(filename = "./out/barcharts.png", width = 470, height = 520, units = "px", type = "cairo-png")
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.14))
 dev.off()
 
 
 ## plotting 2015 population map
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = popn_thousand)) +
   geom_polygon(alpha = 0.9) +
-  geom_path(size = 0.4) +
-  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015")) +
+  geom_path(colour = "grey30", size = 0.4) +
+  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015", 
+                                                               title.position = "bottom")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
+        legend.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 11),
         legend.position = c(0.15, 0.2),
-        plot.margin = unit(c(0, 0, 0, 0), "mm"),
+        plot.margin = unit(c(30, 0, 0, 10), "mm"),
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
-# grid.arrange(popn_gv, popn_rest, ncol = 2)
-
-png(filename = "./out/popn_viz.png", width = 430, height = 400, units = "px", type = "cairo-png")
+png(filename = "./out/popn_viz.png", width = 460, height = 425, units = "px", type = "cairo-png")
 multiplot(popn_plot15)
 dev.off()
 
-png(filename = "./out/popn_viz.png", width = 930, height = 465, units = "px", type = "cairo-png")
-multiplot(popn_plot15, barchart, cols = 2, widths = c(1.3, 1))
-dev.off()
+# grid.arrange(popn_gv, popn_rest, ncol = 2)
+
+# png(filename = "./out/popn_viz.png", width = 930, height = 465, units = "px", type = "cairo-png")
+# multiplot(popn_plot15, barchart, cols = 2, widths = c(1.3, 1))
+# dev.off()
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
@@ -157,7 +164,7 @@ pal <- c(brewer.pal(5, "YlOrBr")[5:1], brewer.pal(3, "Greys"))
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
   geom_polygon(alpha = 0.9) +
-  geom_path(colour = "grey30", size = 0.4) +
+  geom_path(colour = "grey30", size = 0.3) +
   # scale_fill_manual(values = scale_colours, drop = FALSE,
   #                   guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
   scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal), 
@@ -166,7 +173,8 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
-        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10, face = "bold"),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
 
