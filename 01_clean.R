@@ -83,16 +83,12 @@ popn_sum <- popn_rd %>%
   mutate_each_(funs(pct), vars) %>%
   filter(Year != 1986)
 
-## creating new column to label Greater Vancouver for bar chart
-popn_sum["grouped"] <- NA
-for (i in 1:length(popn_sum$Regional.District)) {
-  if (popn_sum$Regional.District[i] == "Greater Vancouver") {
-    popn_sum$grouped <- "Gv"
-  }
-  else {
-    popn_sum$grouped[i] <- "Other RD"
-  }
-}
+## creating new dataframe to separate Greater Vancouver from other rd with less population
+popn_gv <- popn_sum %>% 
+  filter(Regional.District == "Greater Vancouver")
+
+popn_rest <- popn_sum %>% 
+  filter(Regional.District != "Greater Vancouver")
 
 ## ordering regional districts based on 2015 population
 popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
