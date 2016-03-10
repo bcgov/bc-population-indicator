@@ -84,11 +84,12 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
         axis.text.x = element_text(size = 8, hjust = 0.7),
         axis.text.y = element_text(size = 8),
         axis.title = element_text(size = 12),
+        plot.margin = unit(c(10, 0, 0, 0), "mm"), 
         text = element_text(family = "Verdana"))
 plot(rd_facet)
 
 ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
-       width = 8.6, height = 6.3, units = "in", dpi = 100)
+       width = 8.6, height = 6.5, units = "in", dpi = 100)
 
 
 ## plotting 2 barcharts for 2015 Greater Vancouver and other regional districts
@@ -104,9 +105,9 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
   theme_soe() +
   theme(axis.title = element_blank(),
         axis.text = element_text(size = 11),
+        legend.position = "none",
         panel.grid = element_blank(),
         plot.margin = unit(c(0, 15, 15, 21), "mm"),
-        legend.position = "none",
         text = element_text(family = "Verdana")) 
 plot(gv_barchart)
 
