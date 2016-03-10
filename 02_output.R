@@ -18,10 +18,10 @@ library(raster) #for interesect and aggregate functions
 library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
 library(envreportutils) #soe theme
 library(ggplot2) #for plotting
-library(dygraphs) #for interactive chart plot
 library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
+library(gridExtra)
 
 
 ## simplifying the polygons in shapefile
@@ -89,28 +89,44 @@ ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
        width = 8.4, height = 6.3, units = "in", dpi = 100)
 
 
-## plotting barchart for 2015 regional district population
+## plotting 2 barcharts for 2015 Greater Vancouver and other regional districts
 pal15 <- brewer.pal(5, "YlOrBr")
 
-barchart <- ggplot(data = popn_sum, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", colour = "grey40") +
-  # coord_flip() +
+gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", fill = brewer.pal(5, "YlOrBr")[5], 
+           colour = "grey40") +
+  coord_flip() +
+  scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015")) +
-  facet_wrap(~grouped, scales = "free_y") +
+  scale_fill_gradientn(colours = pal15) +
   theme_soe() +
   theme(axis.title = element_blank(),
         panel.grid = element_blank(),
-        plot.margin = unit(c(0, 10, 5, 5), "mm"),
-        legend.title = element_text(size = 11, face = "bold"),
-        # axis.text.x = element_text(size = 8),
-        # axis.text.y = element_text(size = 8),
+        # plot.margin = unit(c(0, 10, 5, 21), "mm"),
+        legend.position = "none",
         text = element_text(family = "Verdana")) 
-plot(barchart)
-  
+plot(gv_barchart)
+
+rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", colour = "grey40") +
+  coord_flip() +
+  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
+  scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
+  theme_soe() +
+  theme(axis.title = element_blank(),
+        panel.grid = element_blank(),
+        # plot.margin = unit(c(0, 10, 5, 5), "mm"),
+        legend.position = "none",
+        text = element_text(family = "Verdana")) 
+plot(rest_barchart)
+
+png(filename = "./out/barcharts.png", width = 400, height = 470, units = "px", type = "cairo-png")
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.08))
+dev.off()
+
 
 ## plotting 2015 population map
-popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total)) +
+popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = popn_thousand)) +
   geom_polygon(alpha = 0.9) +
   geom_path(size = 0.4) +
   scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015")) +
@@ -123,6 +139,12 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         plot.margin = unit(c(0, 0, 0, 0), "mm"),
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
+
+# grid.arrange(popn_gv, popn_rest, ncol = 2)
+
+png(filename = "./out/popn_viz.png", width = 430, height = 400, units = "px", type = "cairo-png")
+multiplot(popn_plot15)
+dev.off()
 
 png(filename = "./out/popn_viz.png", width = 930, height = 465, units = "px", type = "cairo-png")
 multiplot(popn_plot15, barchart, cols = 2, widths = c(1.3, 1))
