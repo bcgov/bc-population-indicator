@@ -107,7 +107,7 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
         axis.text = element_text(size = 11),
         legend.position = "none",
         panel.grid = element_blank(),
-        plot.margin = unit(c(0, 15, 15, 21), "mm"),
+        plot.margin = unit(c(0, 15, 15, 19.5), "mm"),
         text = element_text(family = "Verdana")) 
 plot(gv_barchart)
 
@@ -144,7 +144,7 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         legend.title = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 11),
         legend.position = c(0.15, 0.2),
-        plot.margin = unit(c(30, 0, 0, 10), "mm"),
+        plot.margin = unit(c(20, 0, 0, 0), "mm"),
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
