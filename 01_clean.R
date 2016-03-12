@@ -92,3 +92,7 @@ popn_rest <- popn_sum %>%
 
 ## ordering regional districts based on 2015 population
 popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
+
+## saving workspace image for knitr file
+dir.create("tmp", showWarnings = FALSE)
+save.image("tmp/popn_clean.RData")
