@@ -6,4 +6,5 @@ data/
 out/
 tmp/
 img/
+print_ver/
 internal.R
