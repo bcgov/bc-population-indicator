@@ -14,6 +14,7 @@ library(sp) #for spatial files
 library(maptools) #for fortify function
 library(rgdal) # for spatial projection
 library(bcmaps) #for BC boundary
+library(dplyr) #for joining dataframes
 library(raster) #for interesect and aggregate functions
 library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
 library(envreportutils) #soe theme
@@ -22,6 +23,12 @@ library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
 
+## @knitr pre
+
+##font selection
+chart_font_web <- "Verdana"
+
+## @knitr line_plot
 
 ## simplifying the polygons in shapefile
 cd <- ms_simplify(cd, keep = 0.01, keep_shapes = TRUE, explode = TRUE)
@@ -37,7 +44,7 @@ cd_plot <- fortify(cd, region = "CDUID")
 cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 
 ## preparing image to insert to BC line graph
-img <- readPNG("img/popn.png")
+img <- readPNG("popn.png")
 g <- rasterGrob(img, interpolate = TRUE)
 
 
@@ -60,6 +67,7 @@ plot(bc_plot)
 ggsave("./out/popn_line.png", plot = bc_plot, type = "cairo-png", 
        width = 7.4, height = 5.3, units = "in", dpi = 100)
 
+## @knitr facet
 
 ## plotting regional district facet graph
 rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
@@ -80,6 +88,7 @@ plot(rd_facet)
 ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
        width = 8.6, height = 6.5, units = "in", dpi = 100)
 
+## @knitr barcharts
 
 ## plotting 2 barcharts for 2015 Greater Vancouver and other regional districts
 pal15 <- brewer.pal(5, "YlOrBr")
@@ -119,12 +128,13 @@ png(filename = "./out/barcharts.png", width = 470, height = 520, units = "px", t
 multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.14))
 dev.off()
 
+## @knitr plot15
 
 ## plotting 2015 population map
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = popn_thousand)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey30", size = 0.4) +
-  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "Population\nin 2015", 
+  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "2015\nPopulation\n(*1000)", 
                                                                title.position = "bottom")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
@@ -141,6 +151,7 @@ png(filename = "./out/popn_viz.png", width = 460, height = 425, units = "px", ty
 multiplot(popn_plot15)
 dev.off()
 
+## @knitr change_map
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
