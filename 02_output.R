@@ -32,16 +32,6 @@ cd <- aggregate(cd, by = "CDUID")
 ## converting spatial file to dataframe
 cd_plot <- fortify(cd, region = "CDUID")
 
-# ##categorise change and add Color Brewer (http://colorbrewer2.org/) palette:
-# scale_colours <- c("#01665e", "#35978f", "#80cdc1", "#dfc27d", "#bf812d", "#8c510a")
-# names(scale_colours) <- c("-41 to -28", "-27 to -14", "-13 to 0", "1 to 14", "15 - 28", "29 - 42")
-
-# ## creating scale breaks for map plot
-# popn_pct$category <- cut(popn_pct$Total_change,
-#                          breaks = c(-Inf, -28, -14, 0, 14, 28, 42),
-#                          labels = names(scale_colours),
-#                          include.lowest = FALSE, right = TRUE, ordered_result = TRUE)
-# popn_pct$colour_code <- scale_colours[popn_pct$category]
 
 ## joining tabular and spatial data
 cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
@@ -151,11 +141,6 @@ png(filename = "./out/popn_viz.png", width = 460, height = 425, units = "px", ty
 multiplot(popn_plot15)
 dev.off()
 
-# grid.arrange(popn_gv, popn_rest, ncol = 2)
-
-# png(filename = "./out/popn_viz.png", width = 930, height = 465, units = "px", type = "cairo-png")
-# multiplot(popn_plot15, barchart, cols = 2, widths = c(1.3, 1))
-# dev.off()
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
