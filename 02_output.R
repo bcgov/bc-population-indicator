@@ -131,6 +131,7 @@ dev.off()
 ## @knitr plot15
 
 ## plotting 2015 population map
+pal15 <- brewer.pal(5, "YlOrBr")
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = popn_thousand)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey30", size = 0.4) +
