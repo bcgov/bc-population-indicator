@@ -19,20 +19,23 @@ library(envreportutils) #for order dataframe function
 ## Tabular data files publically available from BC Stats on-line: 
 ## http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx
 ## [license: BC Crown Copyright]
-## Files located under Municipalities, Regional Districts & Development Regions section
 
-## loading population data of 2001-05 and 2011-15
+## loading tabular annual population data for BC from 1867-2015
+## downloaded directly from BC Stats and cleaned for machine-readable format
 popn <- read.csv("Z:/sustainability/population/Population_Estimates.csv", stringsAsFactors = FALSE)
+
+## loading tabular regional district population data from 1986-2015
+## downloaded via search tool under Population by Age and Sex, first cell renamed to SGC for machine readable format
 popn_bc <- read.csv("Z:/sustainability//population/BC_annual_population_estimates.csv", stringsAsFactors = FALSE)
 
-## BC Census Division spatial data publically available from Statistics Canada on-line:
+## BC Census Division open spatial data available from Statistics Canada on-line:
 ## 2011 Statistics Canada Census - Boundary files: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm
 ## (license: Statistics Canada Open License Agreement)
 ## Select -- Format: ArcGIS (.shp), Boundary: Census Divisions, Type: Cartographic Boundary File
-## Unpackaged .zip file
+## Unpackaged .zip file, unzipped before loading
 
 ## preparing census division shapefiles
-cd <- readOGR(dsn = "Z:/sustainability/population/shapefile", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
+cd <- readOGR(dsn = "Z:/sustainability/population/Census_Divisions/gcd_000b11a_e", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
 
 ## extract shape for BC only
 cd<- cd[cd$PRUID =="59", ] 
