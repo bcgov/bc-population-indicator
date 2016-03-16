@@ -49,7 +49,7 @@ popn_bc <- popn_bc %>%
 ## clean regional district dataframe 
 popn_rd <- popn %>% 
   filter(Regional.District != "British Columbia") %>% 
-  select(SGC, Regional.District, Year, Total) %>% 
+  dplyr::select(SGC, Regional.District, Year, Total) %>% 
   mutate(popn_thousand = round(Total/1000, 0))
   
 ## format dash signs in regional district dataframe
