@@ -52,7 +52,6 @@ g <- rasterGrob(img, interpolate = TRUE)
 ## ploting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
-  # ggtitle("Annual B.C. Population (1867-2015)") +
   xlab("") +
   ylab("B.C. Population(Million)") +
   annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2.3, ymax = 4.8) +
@@ -60,15 +59,12 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
   theme(panel.grid = element_blank(),
-        # plot.title = element_text(hjust = 0, face = "plain"),
-        axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8),
-        axis.title = element_text(size = 12),
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
-ggsave("./out/popn_line.png", type = "cairo-png",
-       width = 6.4, height = 4.5, units = "in", dpi = 100)
+png(filename = "./out/popn_line.png", width = 640, height = 450, units = "px", type = "cairo-png")
+plot(bc_plot)
+dev.off()
 
 
 ## @knitr facet
@@ -89,6 +85,9 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
         text = element_text(family = "Verdana"))
 plot(rd_facet)
 
+png("./out/popn_facet.png", width = 860, height = 650, units = "px")
+plot(rd_facet)
+dev.off()
 ggsave("./out/popn_facet.png", plot = rd_facet, type = "cairo-png",
        width = 8.6, height = 6.5, units = "in", dpi = 100)
 
@@ -146,8 +145,7 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
-        legend.title = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 11),
+        legend.title = element_text(size = 11, face = "bold"),
         legend.position = c(0.15, 0.2),
         plot.margin = unit(c(20, 0, 0, 0), "mm"),
         text = element_text(family = "Verdana"))
@@ -175,11 +173,11 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10, face = "bold"),
+        legend.title = element_text(size = 11, face = "bold"),
         legend.position = c(0.15, 0.2),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
 
-ggsave("./out/popn_pctplot.png", plot = rd_plot, type = "cairo-png",
-       width = 6.5, height = 5.5, units = "in", dpi = 100)
+png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 6.5, height = 5.5, units = "px")
+plot(rd_plot)
+dev.off()
