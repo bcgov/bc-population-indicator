@@ -45,7 +45,7 @@ cd_plot <- fortify(cd, region = "CDUID")
 cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 
 ## preparing image to insert to BC line graph
-img <- readPNG("popn.png")
+img <- readPNG("source_image/popn.png")
 g <- rasterGrob(img, interpolate = TRUE)
 
 
