@@ -16,7 +16,6 @@ library(rgdal) # for spatial projection
 library(bcmaps) #for BC boundary
 library(dplyr) #for joining dataframes
 library(raster) #for interesect and aggregate functions
-library(rmapshaper) #simplifying the district boundaries; package & details on GitHub -- https://github.com/ateucher/rmapshaper
 library(envreportutils) #soe theme
 library(ggplot2) #for plotting
 library(RColorBrewer) #for colour palette
@@ -33,9 +32,6 @@ dir.create('out', showWarnings = FALSE)
 chart_font_web <- "Verdana"
 
 ## @knitr line_plot
-
-## simplifying the polygons in shapefile
-cd <- ms_simplify(cd, keep = 0.01, keep_shapes = TRUE, explode = TRUE)
 
 ## aggregating small polygons
 cd <- aggregate(cd, by = "CDUID")
