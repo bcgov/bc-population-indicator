@@ -62,10 +62,11 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
   theme(panel.grid = element_blank(),
+        axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
-png(filename = "./out/popn_line.png", width = 640, height = 450, units = "px", type = "cairo-png")
+png(filename = "./out/popn_line.png", width = 650, height = 450, units = "px", type = "cairo-png")
 plot(bc_plot)
 dev.off()
 
@@ -82,7 +83,7 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   theme_soe_facet() +
   theme(panel.grid = element_blank(),
         axis.text.x = element_text(hjust = 0.7),
-        axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+        axis.title.y = element_text(margin = margin(0, 10, 0, 0), size = 14),
         plot.margin = unit(c(10, 0, 0, 0), "mm"), 
         text = element_text(family = "Verdana"))
 plot(rd_facet)
@@ -107,10 +108,10 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
   scale_y_continuous(expand = c(0, 0)) +
   scale_fill_gradientn(colours = pal15) +
   theme_soe() +
-  theme(axis.text = element_text(size = 11),
+  theme(axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
         legend.position = "none",
         panel.grid = element_blank(),
-        plot.margin = unit(c(0, 15, 15, 14), "mm"),
+        plot.margin = unit(c(0, 15, 15, 15), "mm"),
         text = element_text(family = "Verdana")) 
 plot(gv_barchart)
 
@@ -122,7 +123,6 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_th
   scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
   theme_soe() +
   theme(axis.title = element_blank(),
-        axis.text = element_text(size = 11),
         panel.grid = element_blank(),
         plot.margin = unit(c(10, 15, 5, 5), "mm"),
         legend.position = "none",
@@ -179,6 +179,6 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         text = element_text(family = "Verdana"))
 plot(rd_plot)
 
-png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 6.5, height = 5.5, units = "px")
+png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 650, height = 550, units = "px")
 plot(rd_plot)
 dev.off()
