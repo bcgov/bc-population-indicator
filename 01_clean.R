@@ -15,6 +15,7 @@ library(tidyr) #for reformatting dataframes
 library(reshape2) #format dataframe
 library(rgdal) #for reading shapefile
 library(envreportutils) #for order dataframe function
+library(bcmaps) #for regional district map plot; package & details on GitHub -- https://github.com/bcgov/bcmaps
 
 ## Tabular data files publically available from BC Stats on-line: 
 ## http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx
@@ -28,17 +29,9 @@ popn <- read.csv("Z:/sustainability/population/Population_Estimates.csv", string
 ## downloaded via search tool under Population by Age and Sex, first cell renamed to SGC for machine readable format
 popn_bc <- read.csv("Z:/sustainability//population/BC_annual_population_estimates.csv", stringsAsFactors = FALSE)
 
-## BC Census Division open spatial data available from Statistics Canada on-line:
-## 2011 Statistics Canada Census - Boundary files: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm
-## (license: Statistics Canada Open License Agreement)
-## Select -- Format: ArcGIS (.shp), Boundary: Census Divisions, Type: Cartographic Boundary File
-## Unpackaged .zip file, unzipped before loading
 
-## preparing census division shapefiles
-cd <- readOGR(dsn = "Z:/sustainability/population/Census_Divisions/gcd_000b11a_e", layer = "gcd_000b11a_e", encoding = "ESRI Shapefile", stringsAsFactors = FALSE)
-
-## extract shape for BC only
-cd<- cd[cd$PRUID =="59", ] 
+## preparing regional district map for census division population display
+cd <- regional_districts_disp
 
  
 ## format population values in BC dataframe
