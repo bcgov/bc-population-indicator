@@ -99,7 +99,7 @@ dev.off()
 pal15 <- brewer.pal(5, "YlOrBr")
 
 gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", fill = brewer.pal(5, "YlOrBr")[5], 
+  geom_bar(stat = "identity", position = "identity", fill = pal15[5], 
            colour = "grey30", size = 0.2, alpha = 0.9) +
   labs(xlab("")) +
   labs(ylab("Population (*1000)")) +
@@ -156,7 +156,7 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
-png(filename = "./out/popn_viz.png", width = 460, height = 425, units = "px", type = "cairo-png")
+png(filename = "./out/popn_viz.png", width = 450, height = 435, units = "px", type = "cairo-png")
 multiplot(popn_plot15)
 dev.off()
 
@@ -183,6 +183,6 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         text = element_text(family = "Verdana"))
 plot(rd_plot)
 
-png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 650, height = 550, units = "px")
+png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 650, height = 530, units = "px")
 plot(rd_plot)
 dev.off()
