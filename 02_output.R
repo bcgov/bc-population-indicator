@@ -21,7 +21,6 @@ library(ggplot2) #for plotting
 library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
-library(gtable) #for adding subtitles
 
 ## create a folder to store the output plots
 dir.create('out', showWarnings = FALSE)
