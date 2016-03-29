@@ -52,11 +52,14 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
   xlab("") +
   ylab("B.C. Population (Million)") +
-  annotation_custom(g, xmin = 1888, xmax = 1925, ymin = 2.3, ymax = 4.8) +
+  annotate("text", x = 1920, y = 4.3, label = "British Columbia’s population has grown from\n3 million to 4.68 million in the past 30 years",
+           size = 4.5, family = "Verdana") +
+  annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
   scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15), expand = c(0.02, 0)) +
   scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
-  theme(panel.grid = element_blank(),
+  theme(axis.text = element_text(size = 12),
+        panel.grid = element_blank(),
         axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
@@ -77,8 +80,11 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
   theme_soe_facet() +
   theme(panel.grid = element_blank(),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 12),
         axis.text.x = element_text(hjust = 0.7),
         axis.title.y = element_text(margin = margin(0, 10, 0, 0), size = 14),
+        strip.text = element_text(size = 10),
         plot.margin = unit(c(10, 0, 0, 0), "mm"), 
         text = element_text(family = "Verdana"))
 plot(rd_facet)
@@ -104,6 +110,8 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
   scale_fill_gradientn(colours = pal15) +
   theme_soe() +
   theme(axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 11),
         legend.position = "none",
         panel.grid = element_blank(),
         plot.margin = unit(c(0, 15, 15, 15), "mm"),
@@ -118,6 +126,8 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_th
   scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
   theme_soe() +
   theme(axis.title = element_blank(),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 11),
         panel.grid = element_blank(),
         plot.margin = unit(c(10, 15, 5, 5), "mm"),
         legend.position = "none",
