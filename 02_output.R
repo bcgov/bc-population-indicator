@@ -80,10 +80,9 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
   theme_soe_facet() +
   theme(panel.grid = element_blank(),
-        axis.text.x = element_text(size = 10),
+        axis.text.x = element_text(size = 10, hjust = 0.7),
         axis.text.y = element_text(size = 12),
-        axis.text.x = element_text(hjust = 0.7),
-        axis.title.y = element_text(margin = margin(0, 10, 0, 0), size = 14),
+        axis.title.y = element_text(margin = margin(0, 10, 0, 0), size = 12),
         strip.text = element_text(size = 10),
         plot.margin = unit(c(10, 0, 0, 0), "mm"), 
         text = element_text(family = "Verdana"))
