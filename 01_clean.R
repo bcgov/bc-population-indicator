@@ -42,6 +42,9 @@ area_df <- data.frame(SGC = cd_area$CDUID, area = area_vector)
 popn_bc <- popn_bc %>% 
   mutate(popn_million = round(Population/1000000, 2))
 
+## calculate BC population change from 1986 - 2015
+bc_change <- popn_bc$Population[popn_bc$Year == 2015] - popn_bc$Population[popn_bc$Year == 1986]
+bc_pct <- bc_change/popn_bc$Population[popn_bc$Year == 1986]*100
 
 ## clean regional district dataframe 
 popn_rd <- popn %>% 
