@@ -47,7 +47,7 @@ img <- readPNG("source_image/popn.png")
 g <- rasterGrob(img, interpolate = TRUE)
 
 
-## ploting long-term BC population line graph
+## plotting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
   xlab("") +
@@ -77,6 +77,7 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
   scale_x_continuous(breaks = seq(1991, 2015, 8), expand=c(0,0)) +
   labs(xlab("")) +
   labs(ylab("Population (*1000)")) +
+  ggtitle("British Columbia Population Change by Regional District (1986-2015)\n") +
   facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
   theme_soe_facet() +
   theme(panel.grid = element_blank(),
