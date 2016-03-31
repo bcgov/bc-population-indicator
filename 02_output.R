@@ -144,7 +144,7 @@ pal15 <- brewer.pal(5, "YlOrBr")
 popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = density)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey30", size = 0.4) +
-  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "2015\nPopulation\n(*1000)", 
+  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "2015\nPopulation\nDensity", 
                                                                title.position = "bottom")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
