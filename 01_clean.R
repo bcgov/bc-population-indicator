@@ -30,10 +30,14 @@ popn <- read.csv("Z:/sustainability/population/Population_Estimates.csv", string
 popn_bc <- read.csv("Z:/sustainability//population/BC_annual_population_estimates.csv", stringsAsFactors = FALSE)
 
 
-## preparing regional district map for census division population display
+## preparing regional district map for census division population display and area
 cd <- regional_districts_disp
-
+cd_area <- regional_districts_analysis
  
+## extract regional district area values
+area_vector <- sapply(slot(cd, "polygons"), slot, "area")
+area_df <- data.frame(SGC = cd_area$CDUID, area = area_vector)
+
 ## format population values in BC dataframe
 popn_bc <- popn_bc %>% 
   mutate(popn_million = round(Population/1000000, 2))
@@ -79,6 +83,9 @@ popn_sum <- popn_rd %>%
   mutate_each_(funs(pct), vars) %>%
   filter(Year != 1986)
 
+## ordering regional districts based on 2015 population
+popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
+
 ## creating new dataframe to separate Greater Vancouver from other rd with less population
 popn_gv <- popn_sum %>% 
   filter(Regional.District == "Greater Vancouver")
@@ -86,8 +93,10 @@ popn_gv <- popn_sum %>%
 popn_rest <- popn_sum %>% 
   filter(Regional.District != "Greater Vancouver")
 
-## ordering regional districts based on 2015 population
-popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
+## join popn_sum and regional district area dataframes to calculate population density
+popn_sum <- left_join(popn_sum, area_df, by = c("SGC" = "SGC"))
+popn_sum <- popn_sum %>%
+  mutate(density = round(Total/(area/10^6), 0)) 
 
 ## saving workspace image for knitr file
 dir.create("tmp", showWarnings = FALSE)
