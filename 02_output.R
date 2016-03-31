@@ -52,7 +52,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
   xlab("") +
   ylab("B.C. Population (Million)") +
-  annotate("text", x = 1920, y = 4.3, label = "British Columbia’s population has grown from\n3 million to 4.68 million in the past 30 years",
+  annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.68 million people.",
            size = 4.5, family = "Verdana") +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
   scale_x_continuous(limits = c(1867, 2015), breaks = seq(1880, 2015, 15), expand = c(0.02, 0)) +
