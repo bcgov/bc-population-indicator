@@ -116,7 +116,6 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
         panel.grid = element_blank(),
         plot.margin = unit(c(0, 15, 15, 13.8), "mm"),
         text = element_text(family = "Verdana")) 
-plot(gv_barchart)
 
 rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
   geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9) +
@@ -132,7 +131,7 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_th
         plot.margin = unit(c(10, 15, 5, 5), "mm"),
         legend.position = "none",
         text = element_text(family = "Verdana")) 
-plot(rest_barchart)
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.25))
 
 png(filename = "./out/barcharts.png", width = 470, height = 530, units = "px", type = "cairo-png")
 multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.18))
@@ -170,8 +169,6 @@ pal <- c(brewer.pal(5, "YlOrBr")[5:1], brewer.pal(3, "Greys"))
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = Total_change)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey30", size = 0.3) +
-  # scale_fill_manual(values = scale_colours, drop = FALSE,
-  #                   guide = guide_legend(title = "Change Of B.C.\nPopulation\nin the Last\n30 Years (%)")) +
   scale_fill_gradientn(limits = c(-50, 110), colours = rev(pal), 
                        guide = (guide_colourbar(title = "Percent Change\nin Population",
                                                 title.position = "bottom"))) +
