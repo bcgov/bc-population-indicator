@@ -64,10 +64,6 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
         text = element_text(family = "Verdana")) 
 plot(bc_plot)
 
-png(filename = "./out/popn_line.png", width = 650, height = 450, units = "px", type = "cairo-png")
-plot(bc_plot)
-dev.off()
-
 
 ## @knitr facet
 
@@ -88,10 +84,6 @@ rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
         plot.margin = unit(c(10, 0, 0, 0), "mm"), 
         text = element_text(family = "Verdana"))
 plot(rd_facet)
-
-png("./out/popn_facet.png", width = 860, height = 650, units = "px", type = "cairo-png")
-plot(rd_facet)
-dev.off()
 
 
 ## @knitr barcharts
@@ -131,11 +123,8 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_th
         plot.margin = unit(c(10, 15, 5, 5), "mm"),
         legend.position = "none",
         text = element_text(family = "Verdana")) 
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.25))
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.2))
 
-png(filename = "./out/barcharts.png", width = 470, height = 530, units = "px", type = "cairo-png")
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.18))
-dev.off()
 
 ## @knitr plot15
 
@@ -157,9 +146,6 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
-png(filename = "./out/popn_viz.png", width = 450, height = 435, units = "px", type = "cairo-png")
-multiplot(popn_plot15)
-dev.off()
 
 ## @knitr change_map
 
@@ -181,6 +167,25 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = T
         legend.position = c(0.15, 0.2),
         text = element_text(family = "Verdana"))
 plot(rd_plot)
+
+## @knitr stop
+
+## saving plots
+png(filename = "./out/popn_line.png", width = 650, height = 450, units = "px", type = "cairo-png")
+plot(bc_plot)
+dev.off()
+
+png("./out/popn_facet.png", width = 860, height = 650, units = "px", type = "cairo-png")
+plot(rd_facet)
+dev.off()
+
+png(filename = "./out/barcharts.png", width = 470, height = 530, units = "px", type = "cairo-png")
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.18))
+dev.off()
+
+png(filename = "./out/popn_viz.png", width = 450, height = 435, units = "px", type = "cairo-png")
+multiplot(popn_plot15)
+dev.off()
 
 png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 650, height = 530, units = "px")
 plot(rd_plot)
