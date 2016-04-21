@@ -1,0 +1,107 @@
+---
+title: Sustainability
+subtitle: Status and Trends of Population in B.C.
+output:
+  pdf_document:
+    template: I:/SPD/Science Policy & Economics/State of Environment/_dev/templates/print_ver_template.tex
+---
+
+```{r set-options, echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE}
+library(sp) #for spatial files
+library(maptools) #for fortify function
+library(rgdal) #for spatial projection
+library(bcmaps) #for BC boundary
+library(dplyr) #for joining dataframes
+library(raster) #for interesect and aggregate functions
+library(envreportutils) #soe theme
+library(ggplot2) #for plotting
+library(RColorBrewer) #for colour palette
+library(png) #for inserting image to plot
+library(grid) #for creating grid graphic
+library(knitr) #for outputing PDF
+
+load("../tmp/popn_clean.RData")
+opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
+               fig.height = 5.5)
+read_chunk("../02_output.R")
+```
+
+```{r pre}
+```
+British Columbia is one of the fastest growing provinces in Canada^1^. As the number of people living in the province increases so does pressure on the environment — for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
+
+* **The population of British Columbia has grown continuously in the last century.** There are an estimate of `r round(popn_bc[popn_bc$Year == 2015, "popn_million"], 1)` million people living in British Columbia as of 2015. 
+
+* **The majority of British Columbians live in the Greater Vancouver Regional District.** The 2015 estimated population size for Greater Vancouver is more than `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"]/1000000, 1)` million people. The Capital Region District has the second largest population with approximately `r round(popn_sum[popn_sum$Regional.District == "Capital", "Total"]/100000, 0)` hundred thousand people. The Fraser Valley and Central Okanagan have the third and fourth largest population in the province. 
+
+* **Regional population sizes have increased in southern areas of B.C.** The Central Okanagan has seen the largest recent increase in population size — the population more than doubled from 1986 to 2015. Other regions on the southwest coastal regions experienced various increases from 52% to 97%.
+
+* **Regional population sizes have decreased in the northwest of B.C.** The Stikine has seen the largest recent decrease in population size. Population sizes in regional districts in central British Columbia, including Cariboo and Fraser-Fort George, experienced almost no change in estimated population size since 1986.
+\newpage
+
+## Long-term Change in British Columbia's Population Size (1867-2015)
+
+```{r line_plot, fig.height = 4.5}
+```
+\newpage
+
+## B.C. Population Density and Size by Regional Districts (2015)
+
+* British Columbia's population is not evenly distributed throughout the province.
+
+* Greater Vancouver has the largest population and highest population density -- `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"] / sum(popn_sum$Total) * 100, 0)`% of British Columbian's live in Greater Vancouver. The Capital, Fraser Valley, Central Okanagan and Nanaimo Regional Districts all have population sizes greater than 150,000 people.
+
+* The Stikine, Central Coast, and Northern Rockies Regional Districts have the smallest regional population sizes and lowest population densities in the province.
+
+```{r plot15, fig.height = 6}
+```
+\newpage
+
+
+```{r picture}
+```
+![](../out/barcharts.png)
+
+
+\newpage
+
+## B.C. Population Change by Regional District (1986-2015).
+* British Columbia's population increased by `r round((popn_bc$Population[popn_bc$Year == 2015] - popn_bc$Population[popn_bc$Year == 1986])/popn_bc$Population[popn_bc$Year == 1986] * 100, 0)`% from 1986 to 2015, higher than Canada's 37% increase over the same period^1^.
+
+* The Central Okanagan has seen the largest population increase of +`r popn_sum$Total_change[popn_sum$Regional.District == "Central Okanagan"]`% since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional District have all experienced large increases in population size (> 80%).
+
+* The Stikine has seen the largest decrease in population size (`r popn_sum$Total_change[popn_sum$Regional.District == "Stikine"]`%) since 1986. The Skeena-Queen Charlotte and Mount Waddington Regional Districts have also experienced recent declines in population size.
+
+```{r change_map}
+```
+\newpage
+
+```{r picture}
+```
+![](../out/popn_facet.png)
+
+\newpage
+
+## Methods
+This indicator is based on data sourced from [BC Stats](http://bcstats.gov.bc.ca/Home.aspx), the central statistical agency of the Province of British Columbia. The [**R**](https://www.r-project.org/) code for repeating the analyses presented on this page is [available on GitHub](https://github.com/bcgov/bc_population_indicator).
+
+## References and Other Useful Links
+
+[BC Stats: Population Estimates](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx)
+
+[Statistics Canada: Population and Demography](http://www5.statcan.gc.ca/subject-sujet/theme-theme.action?pid=3867&lang=eng&more=0)
+
+^1^Annual Estimates of Population for Canada, Provinces and Territories, from July 1, 1971 to July 1, 2015. Newfoundland & Labrador Statistics Agency (published 09/29/15)(pdf):
+<http://www.stats.gov.nl.ca/statistics/population/PDF/Annual_Pop_Prov.PDF>
+
+
+## Data
+
+\*By accessing these datasets, you agree to the license associated with each file, as indicated in parentheses below.
+
+* British Columbia Annual Population Estimates (1867-2015):  <http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx>
+    - License: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
+
+* Total Population by Regional Districts in B.C. (1986-2015): <http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx>
+    - License: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
+
