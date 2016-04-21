@@ -28,13 +28,13 @@ read_chunk("../02_output.R")
 
 ```{r pre}
 ```
-British Columbia is one of the fastest growing provinces in Canada^1^. As the number of people living in the province increases so does pressure on the environment — for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
+British Columbia's population growth is one of the fastest among provinces in Canada^1^. As the number of people living in the province increases so does pressure on the environment -- for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
 
 * **The population of British Columbia has grown continuously in the last century.** There are an estimate of `r round(popn_bc[popn_bc$Year == 2015, "popn_million"], 1)` million people living in British Columbia as of 2015. 
 
 * **The majority of British Columbians live in the Greater Vancouver Regional District.** The 2015 estimated population size for Greater Vancouver is more than `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"]/1000000, 1)` million people. The Capital Region District has the second largest population with approximately `r round(popn_sum[popn_sum$Regional.District == "Capital", "Total"]/100000, 0)` hundred thousand people. The Fraser Valley and Central Okanagan have the third and fourth largest population in the province. 
 
-* **Regional population sizes have increased in southern areas of B.C.** The Central Okanagan has seen the largest recent increase in population size — the population more than doubled from 1986 to 2015. Other regions on the southwest coastal regions experienced various increases from 52% to 97%.
+* **Regional population sizes have increased in southern areas of B.C.** The Central Okanagan has seen the largest recent increase in population size -- the population more than doubled from 1986 to 2015. Other regions on the southwest coastal regions experienced various increases from 52% to 97%.
 
 * **Regional population sizes have decreased in the northwest of B.C.** The Stikine has seen the largest recent decrease in population size. Population sizes in regional districts in central British Columbia, including Cariboo and Fraser-Fort George, experienced almost no change in estimated population size since 1986.
 \newpage
