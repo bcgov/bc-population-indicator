@@ -74,11 +74,6 @@ British Columbia is one of the fastest growing provinces in Canada^1^. As the nu
 
 ```{r change_map}
 ```
-\newpage
-
-```{r picture}
-```
-![](../out/popn_facet.png)
 
 \newpage
 
