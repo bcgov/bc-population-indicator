@@ -65,27 +65,6 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
 plot(bc_plot)
 
 
-## @knitr facet
-
-## plotting regional district facet graph
-rd_facet <- ggplot(data = popn_rd, aes(x = Year, y = popn_thousand)) +
-  geom_line(show.legend = FALSE, colour = "#a63603", size = 0.8, alpha = 0.8) +
-  scale_x_continuous(breaks = seq(1991, 2015, 8), expand=c(0,0)) +
-  labs(xlab("")) +
-  labs(ylab("Population (*1000)")) +
-  ggtitle("British Columbia Population Change by Regional District (1986-2015)\n") +
-  facet_wrap(~Regional.District, labeller = label_wrap_gen(width = 15, multi_line = TRUE)) +
-  theme_soe_facet() +
-  theme(panel.grid = element_blank(),
-        axis.text.x = element_text(size = 10, hjust = 0.7),
-        axis.text.y = element_text(size = 12),
-        axis.title.y = element_text(margin = margin(0, 10, 0, 0), size = 12),
-        strip.text = element_text(size = 10),
-        plot.margin = unit(c(10, 0, 0, 0), "mm"), 
-        text = element_text(family = "Verdana"))
-plot(rd_facet)
-
-
 ## @knitr barcharts
 
 ## plotting 2 barcharts for 2015 Greater Vancouver and other regional districts
@@ -173,10 +152,6 @@ plot(rd_plot)
 ## saving plots
 png(filename = "./out/popn_line.png", width = 650, height = 450, units = "px", type = "cairo-png")
 plot(bc_plot)
-dev.off()
-
-png("./out/popn_facet.png", width = 860, height = 650, units = "px", type = "cairo-png")
-plot(rd_facet)
 dev.off()
 
 png(filename = "./out/barcharts.png", width = 470, height = 530, units = "px", type = "cairo-png")
