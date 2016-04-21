@@ -6,6 +6,6 @@ data/
 out/
 tmp/
 img/
-print_ver/popn.pdf
+print_ver/*.pdf
 print_ver/source_image/
 internal.R
