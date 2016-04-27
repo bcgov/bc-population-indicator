@@ -99,7 +99,7 @@ multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.2))
 
 \newpage
 
-## B.C. Population Change by Regional District (1986-2015).
+## B.C. Population Change by Regional District (1986-2015)
 * British Columbia's population increased by `r round((popn_bc$Population[popn_bc$Year == 2015] - popn_bc$Population[popn_bc$Year == 1986])/popn_bc$Population[popn_bc$Year == 1986] * 100, 0)`% from 1986 to 2015, higher than Canada's 37% increase over the same period^1^.
 
 * The Central Okanagan has seen the largest population increase of +`r popn_sum$Total_change[popn_sum$Regional.District == "Central Okanagan"]`% since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional District have all experienced large increases in population size (> 80%).
