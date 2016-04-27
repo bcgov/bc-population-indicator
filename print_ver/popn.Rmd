@@ -21,7 +21,7 @@ library(grid) #for creating grid graphic
 library(knitr) #for outputing PDF
 
 load("../tmp/popn_clean.RData")
-opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=TRUE,
+opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
                fig.height = 5.5)
 read_chunk("../02_output.R")
 ```
