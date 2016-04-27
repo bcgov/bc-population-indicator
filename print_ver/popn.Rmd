@@ -1,6 +1,6 @@
 ---
 title: Sustainability
-subtitle: Status and Trends of Population in B.C.
+subtitle: Trends in British Columbia's Population Size and Distribution
 output:
   pdf_document:
     template: I:/SPD/Science Policy & Economics/State of Environment/_dev/templates/print_ver_template.tex
@@ -21,7 +21,7 @@ library(grid) #for creating grid graphic
 library(knitr) #for outputing PDF
 
 load("../tmp/popn_clean.RData")
-opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
+opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=TRUE,
                fig.height = 5.5)
 read_chunk("../02_output.R")
 ```
@@ -30,9 +30,9 @@ read_chunk("../02_output.R")
 ```
 British Columbia's population growth is one of the fastest among provinces in Canada^1^. As the number of people living in the province increases so does pressure on the environment -- for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
 
-* **The population of British Columbia has grown continuously in the last century.** There are an estimate of `r round(popn_bc[popn_bc$Year == 2015, "popn_million"], 1)` million people living in British Columbia as of 2015. 
+* **The population of British Columbia has grown continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2015, "popn_million"], 1)` million people living in British Columbia as of 2015.
 
-* **The majority of British Columbians live in the Greater Vancouver Regional District.** The 2015 estimated population size for Greater Vancouver is more than `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"]/1000000, 1)` million people. The Capital Region District has the second largest population with approximately `r round(popn_sum[popn_sum$Regional.District == "Capital", "Total"]/100000, 0)` hundred thousand people. The Fraser Valley and Central Okanagan have the third and fourth largest population in the province. 
+* **The majority of British Columbians live in the Greater Vancouver Regional District.** The 2015 estimated population size for Greater Vancouver is more than `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"]/1000000, 1)` million people. The Capital Region District has the second largest population with approximately 400,000 people. The Fraser Valley and Central Okanagan have the third and fourth largest population in the province. 
 
 * **Regional population sizes have increased in southern areas of B.C.** The Central Okanagan has seen the largest recent increase in population size -- the population more than doubled from 1986 to 2015. Other regions on the southwest coastal regions experienced various increases from 52% to 97%.
 
@@ -43,25 +43,59 @@ British Columbia's population growth is one of the fastest among provinces in Ca
 
 ```{r line_plot, fig.height = 4.5}
 ```
-\newpage
 
-## B.C. Population Density and Size by Regional Districts (2015)
+## B.C. Population Size and Density by Regional Districts (2015)
 
 * British Columbia's population is not evenly distributed throughout the province.
 
-* Greater Vancouver has the largest population and highest population density -- `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"] / sum(popn_sum$Total) * 100, 0)`% of British Columbian's live in Greater Vancouver. The Capital, Fraser Valley, Central Okanagan and Nanaimo Regional Districts all have population sizes greater than 150,000 people.
+* Greater Vancouver has the largest population size -- `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"] / sum(popn_sum$Total) * 100, 0)`% of British Columbian's live in Greater Vancouver. The Capital and Fraser Valley Regional Districts have population sizes greater than 200,000 people, while the Stikine and Central Coast Regional Districts have the smallest regional population sizes in the province.
 
-* The Stikine, Central Coast, and Northern Rockies Regional Districts have the smallest regional population sizes and lowest population densities in the province.
+* Greater Vancouver has the highest population density with >800 people per square kilometer, followed by the Capital Regional District with 160 people per square kilometer. Most regional districts across the province have population densities of less than 10 people per square kilometer.
+
+\newpage
+
+```{r, fig.height = 7}
+pal15 <- brewer.pal(5, "YlOrBr")
+
+gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", fill = pal15[5], 
+           colour = "grey30", size = 0.2, alpha = 0.9) +
+  labs(xlab("")) +
+  labs(ylab("Population (*1000)")) +
+  coord_flip() +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_gradientn(colours = pal15) +
+  theme_soe() +
+  theme(axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 11),
+        legend.position = "none",
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0, 15, 15, 13.8), "mm"),
+        text = element_text(family = "Verdana")) 
+
+rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9) +
+  coord_flip() +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
+  scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
+  theme_soe() +
+  theme(axis.title = element_blank(),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 11),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(10, 15, 5, 5), "mm"),
+        legend.position = "none",
+        text = element_text(family = "Verdana")) 
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.2))
+```
+
+\newpage
 
 ```{r plot15, fig.height = 6}
 ```
-\newpage
-
-
-```{r picture}
-```
-![](../out/barcharts.png)
-
 
 \newpage
 
@@ -100,3 +134,9 @@ This indicator is based on data sourced from [BC Stats](http://bcstats.gov.bc.ca
 * Total Population by Regional Districts in B.C. (1986-2015): <http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx>
     - License: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
 
+
+Published and Available On-Line at Environmental Reporting BC (May
+2016):
+<http://www.env.gov.bc.ca/soe/indicators/sustainability/bc_population.html>
+
+Email correspondence to: envreportbc@gov.bc.ca
