@@ -121,7 +121,7 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         panel.grid = element_blank(),
         legend.title = element_text(size = 11, face = "bold"),
         legend.position = c(0.15, 0.2),
-        plot.margin = unit(c(20, 0, 0, 0), "mm"),
+        plot.margin = unit(c(15, 0, 0, 0), "mm"),
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
 
@@ -154,12 +154,12 @@ png(filename = "./out/popn_line.png", width = 650, height = 450, units = "px", t
 plot(bc_plot)
 dev.off()
 
-png(filename = "./out/barcharts.png", width = 470, height = 530, units = "px", type = "cairo-png")
+png(filename = "./out/barcharts.png", width = 430, height = 530, units = "px", type = "cairo-png")
 multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.18))
 dev.off()
 
-png(filename = "./out/popn_viz.png", width = 450, height = 435, units = "px", type = "cairo-png")
-multiplot(popn_plot15)
+png(filename = "./out/popn_viz.png", width = 500, height = 465, units = "px", type = "cairo-png")
+plot(popn_plot15)
 dev.off()
 
 png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 650, height = 530, units = "px")
