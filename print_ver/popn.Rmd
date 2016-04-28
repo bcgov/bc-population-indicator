@@ -44,7 +44,7 @@ British Columbia's population growth is one of the fastest among provinces in Ca
 ```{r line_plot, fig.height = 4.5}
 ```
 
-## B.C. Population Size and Density by Regional Districts (2015)
+## B.C. Population Size and Density by Regional District (2015)
 
 * British Columbia's population is not evenly distributed throughout the province.
 
