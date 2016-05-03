@@ -68,10 +68,9 @@ plot(bc_plot)
 ## @knitr barcharts
 
 ## plotting 2 barcharts for 2015 Greater Vancouver and other regional districts
-pal15 <- brewer.pal(5, "YlOrBr")
 
 gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", fill = pal15[5], 
+  geom_bar(stat = "identity", position = "identity", fill = "#767676", 
            colour = "grey30", size = 0.2, alpha = 0.9) +
   labs(xlab("")) +
   labs(ylab("Population (*1000)")) +
@@ -88,8 +87,8 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
         plot.margin = unit(c(0, 15, 15, 13.8), "mm"),
         text = element_text(family = "Verdana")) 
 
-rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9) +
+rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9, fill = "#ececec") +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
