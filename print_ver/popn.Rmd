@@ -64,7 +64,6 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  scale_fill_gradientn(colours = pal15) +
   theme_soe() +
   theme(axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
         axis.text.x = element_text(size = 12),
@@ -80,7 +79,6 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_th
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
-  scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
   theme_soe() +
   theme(axis.title = element_blank(),
         axis.text.x = element_text(size = 12),
