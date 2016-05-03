@@ -56,7 +56,7 @@ popn_rd <- popn %>%
 popn_rd$Regional.District <- gsub("-", " - ", popn_rd$Regional.District)
 
 ## ordering regional districts based on average population size for facet plot
-popn_rd <- order_df(popn_rd, "Regional.District", "Total", mean, desc = TRUE)
+#popn_rd <- order_df(popn_rd, "Regional.District", "Total", mean, desc = TRUE)
 
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
 for (i in 1:length(popn_rd$SGC)) {
@@ -87,7 +87,7 @@ popn_sum <- popn_rd %>%
   filter(Year != 1986)
 
 ## ordering regional districts based on 2015 population
-popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
+#popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
 
 ## creating new dataframe to separate Greater Vancouver from other rd with less population
 popn_gv <- popn_sum %>% 
@@ -96,11 +96,20 @@ popn_gv <- popn_sum %>%
 popn_rest <- popn_sum %>% 
   filter(Regional.District != "Greater Vancouver")
 
+## ordering other regionals districts dataframe based on 2015 population
+#popn_rest <- popn_rest[order(popn_rest$popn_thousand, decreasing = TRUE), ]
+popn_rest <- order_df(popn_rest, target_col = "Regional.District",
+                      value_col = "popn_thousand", fun = sum, desc = TRUE)
+
 ## join popn_sum and regional district area dataframes to calculate population density
 popn_sum <- left_join(popn_sum, area_df, by = c("SGC" = "SGC"))
 popn_sum <- popn_sum %>%
   mutate(density = round(Total/(area/10^6), 0)) 
 
-## saving workspace image for knitr file
-dir.create("tmp", showWarnings = FALSE)
-save.image("tmp/popn_clean.RData")
+## create density labels and categories for plotting density map
+catlab <- c("less than 10", "10 to 60", "61 to 200", "greater than 800")
+popn_sum$cat <- cut(popn_sum$density, breaks = c(-1,10,60,200,900),
+                    include.lowest=TRUE,
+                    labels = catlab)
+
+
