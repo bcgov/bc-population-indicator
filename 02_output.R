@@ -77,7 +77,6 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  scale_fill_gradientn(colours = pal15) +
   theme_soe() +
   theme(axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
         axis.text.x = element_text(size = 12),
@@ -88,11 +87,10 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
         text = element_text(family = "Verdana")) 
 
 rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9, fill = "#ececec") +
+  geom_bar(stat = "identity", colour = "grey30", size = 0.3, alpha = 0.9, fill = "#ececec") +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
-  scale_fill_gradientn(colours = brewer.pal(6, "YlOrBr")[1:2]) +
   theme_soe() +
   theme(axis.title = element_blank(),
         axis.text.x = element_text(size = 12),
@@ -107,13 +105,14 @@ multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.2))
 ## @knitr plot15
 
 ## plotting 2015 population density map
-pal15 <- brewer.pal(5, "YlOrBr")
+colrs <- c("#ffffe5", "#fee391", "#fe9929", "#662506")
+names(colrs) <- catlab
 
-popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = density)) +
+popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = cat)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey30", size = 0.3) +
-  scale_fill_gradientn(colours = pal15, guide = guide_colorbar(title = "2015\nPopulation Density\n(Population/km2)", 
-                                                               title.position = "bottom")) +
+  scale_fill_manual(values = colrs, drop = FALSE,
+                    name = "2015\nPopulation Density\n(Population/km2)") +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
@@ -123,7 +122,6 @@ popn_plot15 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         plot.margin = unit(c(15, 0, 0, 0), "mm"),
         text = element_text(family = "Verdana"))
 plot(popn_plot15)  
-
 
 ## @knitr change_map
 
