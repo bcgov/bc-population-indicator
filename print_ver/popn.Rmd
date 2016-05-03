@@ -20,7 +20,6 @@ library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
 library(knitr) #for outputing PDF
 
-load("../tmp/popn_clean.RData")
 opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
                fig.height = 5.5)
 read_chunk("../02_output.R")
@@ -55,10 +54,10 @@ British Columbia's population growth is one of the fastest among provinces in Ca
 \newpage
 
 ```{r, fig.height = 7}
-pal15 <- brewer.pal(5, "YlOrBr")
+
 
 gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", fill = pal15[5], 
+  geom_bar(stat = "identity", position = "identity", fill = "#767676", 
            colour = "grey30", size = 0.2, alpha = 0.9) +
   labs(xlab("")) +
   labs(ylab("Population (*1000)")) +
@@ -75,8 +74,9 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousa
         plot.margin = unit(c(0, 15, 15, 13.8), "mm"),
         text = element_text(family = "Verdana")) 
 
-rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand, fill = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9) +
+rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand)) +
+  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9,
+           fill = "#ececec") +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
