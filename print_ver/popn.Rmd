@@ -21,6 +21,7 @@ library(grid) #for creating grid graphic
 library(knitr) #for outputing PDF
 library(rprojroot)
 
+## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
 
 opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,

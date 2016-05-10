@@ -23,6 +23,7 @@ library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
 library(rprojroot)
 
+## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
 
 ## create a folder to store the output plots
@@ -46,7 +47,8 @@ cd_plot <- fortify(cd, region = "CDUID")
 cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 
 ## preparing image to insert to BC line graph
-img <- readPNG(root$find_file(file.path("source_image", "popn.png")))
+img_path <- root$find_file(file.path("source_image", "popn.png"))
+img <- readPNG(img_path)
 g <- rasterGrob(img, interpolate = TRUE)
 
 
