@@ -21,6 +21,9 @@ library(ggplot2) #for plotting
 library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
+library(rprojroot)
+
+root <- rprojroot::is_rstudio_project
 
 ## create a folder to store the output plots
 dir.create('out', showWarnings = FALSE)
@@ -43,7 +46,7 @@ cd_plot <- fortify(cd, region = "CDUID")
 cd_plot <- left_join(cd_plot, popn_sum, by = c("id" = "SGC"))
 
 ## preparing image to insert to BC line graph
-img <- readPNG("../source_image/popn.png")
+img <- readPNG(root$find_file(file.path("source_image", "popn.png")))
 g <- rasterGrob(img, interpolate = TRUE)
 
 

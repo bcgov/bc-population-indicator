@@ -27,7 +27,7 @@ popn <- read.csv("Z:/sustainability/population/Population_Estimates.csv", string
 
 ## loading tabular regional district population data from 1986-2015
 ## downloaded via search tool under Population by Age and Sex, first cell renamed to SGC for machine readable format
-popn_bc <- read.csv("Z:/sustainability//population/BC_annual_population_estimates.csv", stringsAsFactors = FALSE)
+popn_bc <- read.csv("Z:/sustainability/population/BC_annual_population_estimates.csv", stringsAsFactors = FALSE)
 
 
 ## preparing regional district map for census division population display and area
