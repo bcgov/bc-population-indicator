@@ -14,6 +14,7 @@ library(dplyr) #data munging
 library(tidyr) #for reformatting dataframes
 library(reshape2) #format dataframe
 library(rgdal) #for reading shapefile
+library(rgeos)
 library(envreportutils) #for order dataframe function
 library(bcmaps) #for regional district map plot; package & details on GitHub -- https://github.com/bcgov/bcmaps
 
@@ -35,7 +36,7 @@ cd <- regional_districts_disp
 cd_area <- regional_districts_analysis
  
 ## extract regional district area values
-area_vector <- sapply(slot(cd, "polygons"), slot, "area")
+area_vector <- gArea(cd, byid = TRUE)
 area_df <- data.frame(SGC = cd_area$CDUID, area = area_vector)
 
 ## format population values in BC dataframe
@@ -104,7 +105,7 @@ popn_rest <- order_df(popn_rest, target_col = "Regional.District",
 ## join popn_sum and regional district area dataframes to calculate population density
 popn_sum <- left_join(popn_sum, area_df, by = c("SGC" = "SGC"))
 popn_sum <- popn_sum %>%
-  mutate(density = round(Total/(area/10^6), 0)) 
+  mutate(density = round(Total/(area/10^6), 0))
 
 ## create density labels and categories for plotting density map
 catlab <- c("less than 10", "10 to 60", "61 to 200", "greater than 800")
