@@ -14,7 +14,7 @@ library(dplyr) #data munging
 library(tidyr) #for reformatting dataframes
 library(reshape2) #format dataframe
 library(rgdal) #for reading shapefile
-library(rgeos)
+library(rgeos) #for polygon area
 library(envreportutils) #for order dataframe function
 library(bcmaps) #for regional district map plot; package & details on GitHub -- https://github.com/bcgov/bcmaps
 
@@ -56,9 +56,6 @@ popn_rd <- popn %>%
 ## format dash signs in regional district dataframe
 popn_rd$Regional.District <- gsub("-", " - ", popn_rd$Regional.District)
 
-## ordering regional districts based on average population size for facet plot
-#popn_rd <- order_df(popn_rd, "Regional.District", "Total", mean, desc = TRUE)
-
 ## format SGC code to match with CDUID code in shapefile for merging dataframes later
 for (i in 1:length(popn_rd$SGC)) {
   if (nchar(popn_rd$SGC[i]) == 4) {
@@ -87,8 +84,6 @@ popn_sum <- popn_rd %>%
   mutate_each_(funs(pct), vars) %>%
   filter(Year != 1986)
 
-## ordering regional districts based on 2015 population
-#popn_sum <- popn_sum[order(popn_sum$Total, decreasing = TRUE), ]
 
 ## creating new dataframe to separate Greater Vancouver from other rd with less population
 popn_gv <- popn_sum %>% 
