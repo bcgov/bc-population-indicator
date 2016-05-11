@@ -21,7 +21,8 @@ library(ggplot2) #for plotting
 library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
-library(rprojroot)
+library(rprojroot) # for finding root of project
+
 
 ## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
