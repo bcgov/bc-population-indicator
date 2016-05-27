@@ -18,6 +18,6 @@ source("02_output.R")
 
 ## Make print version
 mon_year <- format(Sys.Date(), "%B%Y")
-outfile <- paste0("EnvReportBC_BC_population", mon_year, ".pdf")
+outfile <- paste0("EnvReportBC_BC_population_", mon_year, ".pdf")
 rmarkdown::render("print_ver/popn.Rmd", output_file = outfile)
 extrafont::embed_fonts(file.path("print_ver/", outfile))
