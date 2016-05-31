@@ -1,15 +1,37 @@
 <div id="devex-badge">
-<a href="https://github.com/BCDevExchange/docs/blob/master/discussion/projectstates.md"><img alt="An idea being explored and shaped. Open for discussion, but may never go anywhere." style="border-width:0" src="http://bcdevexchange.org/badge/1.svg" title="An idea being explored and shaped. Open for discussion, but may never go anywhere." /></a> 
+<a rel="Delivery" href="https://github.com/BCDevExchange/docs/blob/master/discussion/projectstates.md"><img alt="In production, but maybe in Alpha or Beta. Intended to persist and be supported." style="border-width:0" src="http://bcdevexchange.org/badge/3.svg" title="In production, but maybe in Alpha or Beta. Intended to persist and be supported." /></a>
 </div>
-
 ---
 
-# R scripts for an indicator on BC population change 
+# Trends in B.C.'s Population Size & Distribution 
 
+A set of R scripts to populate an indicator on trends in B.C.'s population size and distribution (2015). These scripts reproduce the analysis published on [Environmental Reporting BC](http://www.env.gov.bc.ca/soe/indicators/sustainability/bc_population.html) in May 2016.
 
-### Project Status
+### Usage
 
-Currently under development
+#### Data
+The data for the indicator is publically available from [BC Stats](http://bcstats.gov.bc.ca/Home.aspx), the central statistical agency of the Province of British Columbia.
+
+ - 'Population Estimates for B.C. for 1867 to 2015' can be downloaded directly from [BC Stats](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx) (license: [BC Crown Copyright](http://www2.gov.bc.ca/gov/content/home/copyright)). The downloaded MS Excel file must be converted to a machine-reabable CSV file.
+
+- 'Population Estimates by B.C. Regional District for 1986-2015' can be downloaded from [BC Stats](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx) via the search tool under Population by Age and Sex (license: [BC Crown Copyright](http://www2.gov.bc.ca/gov/content/home/copyright)). The downloaded MS Excel file must be converted to a machine-reabable CSV file, with the first cell renamed to SGC.
+
+#### Code
+There are two core scripts that are required for the analysis, they need to be run in order:
+
+- `01_clean.R` - cleans and prepares data for analysis
+- `02_output.R` - creates maps and graphs and saves outputs
+
+The `run_all.R` script can be `source`ed to run it all at once.
+
+Most packages used in the analysis can be installed from CRAN using `install.packages()`, but you will need to install [envreportutils](https://github.com/bcgov/envreportutils) using devtools:
+
+```r
+install.packages("devtools") # If you don't already have it installed
+
+library(devtools)
+install_github("bcgov/envreportutils")
+```
 
 ### Getting Help or Reporting an Issue
 
