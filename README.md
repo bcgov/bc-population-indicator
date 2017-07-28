@@ -10,9 +10,9 @@ A set of R scripts to populate an indicator on trends in B.C.'s population size 
 #### Data
 The data for the indicator is publically available from [BC Stats](http://bcstats.gov.bc.ca/Home.aspx), the central statistical agency of the Province of British Columbia.
 
- - 'Population Estimates for B.C. for 1867 to 2015' can be downloaded directly from [BC Stats](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx) (license: [BC Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA)). The downloaded MS Excel file must be converted to a machine-reabable CSV file.
+ - 'Population Estimates for B.C. for 1867 to 2015' can be downloaded directly from [BC Stats](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx) (licence: [B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA)). The downloaded MS Excel file must be converted to a machine-reabable CSV file.
 
-- 'Population Estimates by B.C. Regional District for 1986-2015' can be downloaded from [BC Stats](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx) via the search tool under Population by Age and Sex (license: [BC Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA)). The downloaded MS Excel file must be converted to a machine-reabable CSV file, with the first cell renamed to SGC.
+- 'Population Estimates by B.C. Regional District for 1986-2015' can be downloaded from [BC Stats](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx) via the search tool under Population by Age and Sex (licence: [B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA)). The downloaded MS Excel file must be converted to a machine-reabable CSV file, with the first cell renamed to SGC.
 
 #### Code
 There are two core scripts that are required for the analysis, they need to be run in order:
