@@ -10,3 +10,4 @@ print_ver/*.pdf
 print_ver/source_image/
 internal.R
 *.html
+.DS_Store
