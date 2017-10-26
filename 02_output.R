@@ -37,7 +37,7 @@ chart_font_web <- "Verdana"
 
 ## @knitr line_plot
 
-## aggregating small polygons
+## simplifying map and aggregating small polygons
 foo <- regional_districts_disp
 foo <- ms_simplify(foo, keep = .05)
 cd <- foo
@@ -176,7 +176,7 @@ dev.off()
 
 ## saving plots as SVG
 
-svg_px("./out/popn_line.svg", width = 930, height = 550)
+svg_px("./out/popn_line.svg", width = 650, height = 450)
 plot(bc_plot)
 dev.off()
 
