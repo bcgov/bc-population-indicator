@@ -34,7 +34,8 @@ popn_bc <- read.csv("~/soe_pickaxe/Operations ORCS/Data - Working/sustainability
 ## preparing regional district map for census division population display and area
 cd <- regional_districts_disp
 cd_area <- regional_districts_analysis
- 
+
+## note for next update -- use regional_districts_analysis for area calculation 
 ## extract regional district area values
 area_vector <- gArea(cd, byid = TRUE)
 area_df <- data.frame(SGC = cd_area$CDUID, area = area_vector)
