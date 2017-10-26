@@ -38,7 +38,12 @@ chart_font_web <- "Verdana"
 ## @knitr line_plot
 
 ## aggregating small polygons
+foo <- regional_districts_disp
+foo <- ms_simplify(foo, keep = .05)
+cd <- foo
 cd <- aggregate(cd, by = "CDUID")
+
+#plot(foo)
 
 ## converting spatial file to dataframe
 cd_plot <- fortify(cd, region = "CDUID")
@@ -166,5 +171,23 @@ plot(popn_plot15)
 dev.off()
 
 png(filename = "./out/popn_pctplot.png", type = "cairo-png", width = 650, height = 530, units = "px")
+plot(rd_plot)
+dev.off()
+
+## saving plots as SVG
+
+svg_px("./out/popn_line.svg", width = 930, height = 550)
+plot(bc_plot)
+dev.off()
+
+svg_px("./out/barcharts.svg", width = 430, height = 530)
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.18))
+dev.off()
+
+svg_px("./out/popn_viz.svg", width = 500, height = 465)
+plot(popn_plot15)
+dev.off()
+
+svg_px("./out/popn_pctplot.svg", width = 650, height = 530)
 plot(rd_plot)
 dev.off()
