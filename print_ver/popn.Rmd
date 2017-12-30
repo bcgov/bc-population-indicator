@@ -1,111 +1,80 @@
 ---
-title: Sustainability
-subtitle: Trends in British Columbia's Population Size & Distribution
-output:
-  pdf_document:
-    template: I:/SPD/Science Policy & Economics/State of Environment/_dev/templates/print_ver_template.tex
+topic: "sustainability"
+title: "Trends in British Columbia's Population Size & Distribution"
+output: envreportutils.internal::print_ver
 ---
 
 ```{r set-options, echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE}
-library(sp) #for spatial files
-library(maptools) #for fortify function
-library(rgdal) #for spatial projection
-library(bcmaps) #for BC boundary
-library(dplyr) #for joining dataframes
-library(raster) #for interesect and aggregate functions
+library(readr) #data import
+library(dplyr) #data munging
+library(bcmaps) #for BC regional district map
+library(sf) #sf map object
+library(stringr) #modifying character strings
+library(rmapshaper) #map clipping
+library(units) #unit conversion
 library(envreportutils) #soe theme
 library(ggplot2) #for plotting
 library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
-library(knitr) #for outputting PDF
-library(rprojroot)
+library(rprojroot) # for finding root of project
 
 ## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
 
-opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
+knitr::opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
                fig.height = 5.5)
-source(root$find_file("01_clean.R"))
-read_chunk(root$find_file("02_output.R"))
+
+#source(root$find_file("01_clean.R"))
+
+knitr::read_chunk(root$find_file("02_output.R"))
+
+load("tmp/sumdata.RData")
+
 ```
 
 ```{r pre}
 ```
 Population growth in British Columbia is among the fastest in Canada.^1^ As the number of people living in the province increases so does pressure on the environment--for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
 
-* **British Columbia's population has increased continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2015, "popn_million"], 1)` million people living in British Columbia as of 2015.
+* **British Columbia's population has increased continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2017, "popn_million"], 1)` million people living in British Columbia as of 2017.
 
-* **The majority of British Columbians live in the Greater Vancouver Regional District.** The 2015 estimated population size for Greater Vancouver is more than `r round(popn_sum[popn_sum$Regional.District == "Greater Vancouver", "Total"]/1000000, 1)` million people. The second largest population, at around 400,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
+* **The majority of British Columbians live in the Greater Vancouver Regional District.** The estimated population size for Greater Vancouver was more than `r round(popsummary[popsummary$Regional_District == "Greater Vancouver", "Total"]/1000000, 1)` million people in 2016. The second largest population, at over 380,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
 
-* **Regional population sizes have increased in southern B.C.** The Central Okanagan has seen the largest recent increase in population size--the population more than doubled from 1986 to 2015.
+* **Regional population sizes have increased in southern B.C.** The Central Okanagan has seen the largest recent increase in population size--the population more than doubled from 1986 to 2016.
 
-* **Regional population sizes have decreased in the northwestern B.C.** The Stikine has seen the largest recent decrease in population size, with the 2015 population approximately half what it was in 1986. Population sizes in regional districts in central British Columbia, including Cariboo and Fraser-Fort George, experienced almost no change in estimated population size since 1986.
+* **Regional population sizes have decreased in the northwestern B.C.** The Stikine has seen the largest recent decrease in population size, with the 2016 population approximately half what it was in 1986. Population sizes in regional districts in central British Columbia, including Cariboo and Fraser-Fort George, experienced almost no change in estimated population size since 1986.
 \newpage
 
-## Long-term Change in British Columbia's Population Size (1867-2015)
+## Long-term Change in British Columbia's Population Size (1867-2017)
 
-```{r line_plot, fig.height = 4.5}
+```{r line_plot, fig.height = 6, fig.width = 10}
 ```
 
-## B.C. Population Size & Density by Regional District (2015)
+## B.C. Population Size & Density by Regional District (2016)
 
 * British Columbia's population is not evenly distributed throughout the province.
 
-* The Greater Vancouver Regional District is home to 54% of British Columbian's--it is B.C.'s largest and most dense population. The Capital and Fraser Valley Regional Districts each have more than 200,000 people. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
+* The Greater Vancouver Regional District is home to over 50% of British Columbian's--it is B.C.'s largest and most dense population. The Capital and Fraser Valley Regional Districts each have more than 300,000 people. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
 
-* Greater Vancouver has the highest population density with greater than 800 people per square kilometer, followed by the Capital Regional District with 160 people per square kilometer. Population density in most of B.C.'s regional districts is fewer than 10 people per square kilometer.
+* Greater Vancouver has the highest population density with greater than 900 people per square kilometer, followed by the Capital Regional District with just over 150 people per square kilometer. Population density in most of B.C.'s regional districts is fewer than 10 people per square kilometer.
 
 \newpage
 
-```{r, fig.height = 7}
-
-
-gv_barchart <- ggplot(data = popn_gv, aes(x = Regional.District, y = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", fill = "#767676", 
-           colour = "grey30", size = 0.2, alpha = 0.9) +
-  labs(xlab("")) +
-  labs(ylab("Population (*1000)")) +
-  coord_flip() +
-  scale_x_discrete(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0)) +
-  theme_soe() +
-  theme(axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
-        axis.text.x = element_text(size = 12),
-        axis.text.y = element_text(size = 11),
-        legend.position = "none",
-        panel.grid = element_blank(),
-        plot.margin = unit(c(0, 15, 15, 13.8), "mm"),
-        text = element_text(family = "Verdana")) 
-
-rest_barchart <- ggplot(data = popn_rest, aes(x = Regional.District, y = popn_thousand)) +
-  geom_bar(stat = "identity", position = "identity", colour = "grey30", size = 0.3, alpha = 0.9,
-           fill = "#ececec") +
-  coord_flip() +
-  scale_x_discrete(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
-  theme_soe() +
-  theme(axis.title = element_blank(),
-        axis.text.x = element_text(size = 12),
-        axis.text.y = element_text(size = 11),
-        panel.grid = element_blank(),
-        plot.margin = unit(c(10, 15, 5, 5), "mm"),
-        legend.position = "none",
-        text = element_text(family = "Verdana")) 
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.2))
+```{r barcharts, fig.height = 7, fig.width = 8}
 ```
 
 \newpage
 
-```{r plot15, fig.height = 6}
+```{r plot16, fig.height = 6}
 ```
 
 \newpage
 
-## B.C. Population Change by Regional District (1986-2015)
-* British Columbia's population increased by `r round((popn_bc$Population[popn_bc$Year == 2015] - popn_bc$Population[popn_bc$Year == 1986])/popn_bc$Population[popn_bc$Year == 1986] * 100, 0)`% from 1986 to 2015; this was higher than Canada's 37% increase over the same period.^1^
+## B.C. Population Change by Regional District (1986-2016)
+* British Columbia's population increased by 58% from 1986 to 2016; this was higher than Canada's 37% increase over a similar period.^1^
 
-* The Central Okanagan has seen the largest population increase -- +`r popn_sum$Total_change[popn_sum$Regional.District == "Central Okanagan"]`% since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional District have all experienced large increases in population size (greater than 80%).
+* The Central Okanagan has seen the largest population increase -- greater than 110% since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional District have all experienced large increases in population size (greater than 80%).
 
 * The Stikine has seen the largest decrease in population size, a 49% decline, since 1986. The Skeena-Queen Charlotte and Mount Waddington Regional Districts have also experienced recent declines in population size.
 
@@ -115,11 +84,11 @@ multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(0.9, 0.2))
 \newpage
 
 ## Methods
-This indicator is based on data sourced from [BC Stats](http://bcstats.gov.bc.ca/Home.aspx), the central statistical agency of the Province of British Columbia. The [**R**](https://www.r-project.org/) code for repeating the analyses presented on this page is [available on GitHub](https://github.com/bcgov/bc_population_indicator).
+This indicator is based on data sourced from [BC Stats](https://www2.gov.bc.ca/gov/content?id=6A488933DEC8411EBC659A5CD4AA92EF), the central statistical agency of the Province of British Columbia. The [**R**](https://www.r-project.org/) code for repeating the analyses presented on this page is [available on GitHub](https://github.com/bcgov/bc-population-indicator).
 
 ## References and Other Useful Links
 
-[BC Stats: Population Estimates](http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx)
+[BC Stats: Population Estimates](https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6)
 
 [Statistics Canada: Population and Demography](http://www5.statcan.gc.ca/subject-sujet/theme-theme.action?pid=3867&lang=eng&more=0)
 
@@ -129,17 +98,17 @@ This indicator is based on data sourced from [BC Stats](http://bcstats.gov.bc.ca
 
 ## Data
 
-\*By accessing these datasets, you agree to the license associated with each file, as indicated in parentheses below.
+\*By accessing these datasets, you agree to the licence associated with each file, as indicated in parentheses below.
 
-* British Columbia Annual Population Estimates (1867-2015):  <http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx>
-    - License: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
+* British Columbia Annual Population Estimates (1867-2017):  <https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6>
+    - Licence: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
 
-* Total Population by Regional Districts in B.C. (1986-2015): <http://www.bcstats.gov.bc.ca/StatisticsBySubject/Demography/PopulationEstimates.aspx>
-    - License: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
+* Total Population by Regional Districts in B.C. (1986-2016): <https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx>
+    - Licence: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
 
 
-Published and Available On-Line at Environmental Reporting BC (May
-2016):
-<http://www.env.gov.bc.ca/soe/indicators/sustainability/bc_population.html>
+Published and Available On-Line at Environmental Reporting BC (January
+2018):
+<http://www.env.gov.bc.ca/soe/indicators/sustainability/bc-population.html>
 
 Email correspondence to: envreportbc@gov.bc.ca
