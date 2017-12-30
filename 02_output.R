@@ -9,7 +9,6 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
-# 
 
 library(bcmaps) #for BC boundary
 library(envreportutils) #soe theme
@@ -19,9 +18,9 @@ library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
 library(rprojroot) # for finding root of project
 library(rmapshaper) # simplify map
-library(sf)
+library(sf) #sf ma
 library(dplyr) #for joining dataframes
-library(patchwork) # combining 2 bar charts
+#library(patchwork) #combining 2 bar charts
 
 ## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
@@ -57,7 +56,6 @@ img_path <- root$find_file(file.path("source_image", "popn.png"))
 img <- readPNG(img_path)
 g <- rasterGrob(img, interpolate = TRUE)
 
-
 ## plotting long-term BC population line graph
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
@@ -66,7 +64,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.82 million people.",
            size = 5, family = "Verdana") +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
-  scale_x_continuous(limits = c(1867, 2017), breaks = seq(1867, 2017, 15), expand = c(0.02, 0)) +
+  scale_x_continuous(limits = c(1867, 2016), breaks = seq(1881, 2016, 15), expand = c(0.02, 0)) +
   scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
   theme(axis.text = element_text(size = 14),
@@ -75,7 +73,6 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
         text = element_text(family = "Verdana"),
         plot.margin = unit(c(5, 5, 5, 5), "mm")) 
 plot(bc_plot)
-
 
 ## @knitr barcharts
 
@@ -89,7 +86,7 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional_District, y = popn_thousa
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 2500, 500), limits = c(0, 2600)) +
-  theme_soe() +
+  theme_minimal() +
   theme(axis.title.y = element_blank(),
         axis.title.x = element_text(margin = margin(10, 0, 0, 0), size = 14),
         axis.text.x = element_text(size = 12),
@@ -104,7 +101,7 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
-  theme_soe() +
+  theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text.x = element_text(size = 12),
         axis.text.y = element_text(size = 12),
@@ -114,9 +111,9 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
         text = element_text(family = "Verdana"))
 multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
 
-# Using `patchwork` 
-#rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
-#rest_barchart / gv_barchart
+## Using `patchwork`
+# rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
+# rest_barchart / gv_barchart
 
 ## @knitr plot16
 

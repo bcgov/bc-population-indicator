@@ -37,10 +37,9 @@ popn_bc <-
   rename(Population = `Population: June 1`) %>%
   na.omit() %>%
   filter("Year" != Year) %>%
+  filter(Year != 2017) %>%
   mutate(popn_million = round(Population / 1000000, 2)) %>% 
   mutate(Year = as.numeric(Year))
-
-
 
 ## read in and clean BC population by Regional District CSV file
 popn <- read_csv(bcregpopdata) %>%
@@ -49,7 +48,6 @@ popn <- read_csv(bcregpopdata) %>%
   mutate(popn_thousand = round(Total / 1000, 0)) %>%
   rename(Regional_District = `Regional District`) %>%
   mutate(Regional_District = str_replace(Regional_District, "-", " - "))
-
 
 ## Calculate BC total and change for 1986 to 2016
 bctot <- read_csv(bcregpopdata) %>%
@@ -60,12 +58,10 @@ bctot <- read_csv(bcregpopdata) %>%
   mutate(percchange = round(((Total-lag(Total))/lag(Total) * 100), digits = 0)) %>% 
   filter(Year == 2016)
 
-
 ## 2016 Population by RD
 popn_sum <- popn %>%
   group_by(Regional_District) %>%
   filter(Year == 2016)
-
 
 ## df to separate Greater Vancouver from other RD with smaller population sizes and
 ## order other rd df based on 2016 population size
@@ -75,7 +71,6 @@ popn_gv <- popn_sum %>%
 popn_rest <- popn_sum %>%
   filter(Regional_District != "Greater Vancouver")
   
-
 ## Combine RDs with Northern Rockies Regional Municipality, fix names
 mun <- get_layer("municipalities") %>%
   filter(ADMIN_AREA_ABBREVIATION == "NRRM") %>%
@@ -95,7 +90,6 @@ rd <- get_layer("regional_districts") %>%
   mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Bulkley Nechako", "Bulkley - Nechako")) %>%
   mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Metro Vancouver", "Greater Vancouver")) %>%
   mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "North Coast", "Skeena - Queen Charlotte"))
-
 
 ## Check that RD names are matching and fix above with str_replace() before joining popn_sum & area_df
 # (diff1 <- setdiff(popn_sum$Regional_District, area_df$Regional_District))
@@ -124,7 +118,6 @@ popn_den$cat <- cut(popn_den$density, breaks = c(-1,10,60,200,1000),
                     include.lowest=TRUE,
                     labels = catlab)
 
-
 ## Calculate total change in population from 1986 to 2015 in regional districts
 popn_change <- popn %>% 
   filter(Year == 1986 | Year == 2016) %>% 
@@ -134,13 +127,10 @@ popn_change <- popn %>%
   filter(Year == 2016) %>% 
   select(-Year) 
  
-
 ## Combine density and change metrics into one df  
 popsummary <- popn_change %>% 
   select(Regional_District, popchange, percchange) %>% 
   left_join(popn_den, by = "Regional_District")
-
-
 
 # Create tmp folder if not already there and store objects in local repository
 if (!exists("tmp")) dir.create("tmp", showWarnings = FALSE)
