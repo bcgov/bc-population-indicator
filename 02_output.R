@@ -28,9 +28,6 @@ root <- rprojroot::is_rstudio_project
 ## Load clean data if not already in local repository
 if (!exists("popsummary")) load("tmp/sumdata.RData")
 
-## create a folder to store the output plots
-if (!exists("out")) dir.create('out', showWarnings = FALSE)
-
 ## @knitr pre
 
 ##font selection
@@ -86,14 +83,14 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional_District, y = popn_thousa
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 2500, 500), limits = c(0, 2600)) +
-  theme_minimal() +
+  theme_soe() +
   theme(axis.title.y = element_blank(),
         axis.title.x = element_text(margin = margin(10, 0, 0, 0), size = 14),
         axis.text.x = element_text(size = 12),
         axis.text.y = element_text(size = 12),
         legend.position = "none",
         panel.grid = element_blank(),
-        plot.margin = unit(c(0, 5, 5, 20), "mm"),
+        plot.margin = unit(c(0, 5, 5, 15), "mm"),
         text = element_text(family = "Verdana"))
 
 rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -popn_thousand), y = popn_thousand)) +
@@ -101,15 +98,16 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
-  theme_minimal() +
+  theme_soe() +
   theme(axis.title = element_blank(),
         axis.text.x = element_text(size = 12),
         axis.text.y = element_text(size = 12),
         panel.grid = element_blank(),
-        plot.margin = unit(c(15, 5, 5, 5), "mm"),
+        plot.margin = unit(c(15, 10, 5, 0), "mm"),
         legend.position = "none",
         text = element_text(family = "Verdana"))
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
+
+multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(1.1, 0.13))
 
 ## Using `patchwork`
 # rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
@@ -163,6 +161,9 @@ plot(rd_plot)
 ## @knitr stop
 
 ## saving plots as SVG
+
+## create a folder to store the output plots
+if (!exists("out")) dir.create('out', showWarnings = FALSE)
 
 svg_px("./out/popn_line.svg", width = 650, height = 450)
 plot(bc_plot)
