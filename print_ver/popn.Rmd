@@ -4,7 +4,7 @@ title: "Trends in British Columbia's Population Size & Distribution"
 output: envreportutils.internal::print_ver
 ---
 
-```{r set-options, echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE}
+```{r set-options, echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, dev='pdf'}
 library(readr) #data import
 library(dplyr) #data munging
 library(bcmaps) #for BC regional district map
@@ -22,8 +22,7 @@ library(rprojroot) #for finding root of project
 ## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
 
-knitr::opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE,
-               fig.height = 5.5)
+knitr::opts_chunk$set(echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE, error=FALSE)
 
 source(root$find_file("01_clean.R"))
 
@@ -45,7 +44,7 @@ Population growth in British Columbia is among the fastest in Canada.^1^ As the 
 
 ## Long-term Change in British Columbia's Population Size (1867-2016)
 
-```{r line_plot, fig.height = 7, fig.width = 11}
+```{r line_plot, fig.width=13, fig.asp=7/13}
 ```
 
 \newpage
@@ -60,7 +59,7 @@ Population growth in British Columbia is among the fastest in Canada.^1^ As the 
 
 \vspace{20pt}
 
-```{r barcharts, fig.height = 8, fig.width = 8}
+```{r barcharts, fig.height = 11, fig.width = 10}
 ```
 
 \newpage
