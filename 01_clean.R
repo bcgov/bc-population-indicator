@@ -36,32 +36,29 @@ popn_bc <-
            col_types = "cn") %>%
   rename(Population = `Population: June 1`) %>%
   na.omit() %>%
-  filter("Year" != Year) %>%
+  filter(Year != "Year") %>%
   filter(Year != 2017) %>%
-  mutate(popn_million = round(Population / 1000000, 2)) %>% 
-  mutate(Year = as.numeric(Year))
+  mutate(popn_million = round(Population / 1000000, 2), 
+         Year = as.integer(Year))
 
 ## read in and clean BC population by Regional District CSV file
 popn <- read_csv(bcregpopdata) %>%
-  select(-Gender, -X1) %>%
-  filter(`Regional District` != "British Columbia") %>%
+  select(Regional_District = `Regional District`, Year, Total) %>%
+  filter(Regional_District != "British Columbia") %>%
   mutate(popn_thousand = round(Total / 1000, 0)) %>%
-  rename(Regional_District = `Regional District`) %>%
   mutate(Regional_District = str_replace(Regional_District, "-", " - "))
 
 ## Calculate BC total and change for 1986 to 2016
 bctot <- read_csv(bcregpopdata) %>%
-  select(-Gender, -X1) %>%
-  filter(`Regional District` == "British Columbia") %>% 
+  select(Regional_District = `Regional District`, Year, Total) %>%
+  filter(Regional_District == "British Columbia") %>% 
   filter(Year == 1986 | Year == 2016) %>% 
-  mutate(popchange = Total[Year==2016] - Total[Year==1986]) %>% 
-  mutate(percchange = round(((Total-lag(Total))/lag(Total) * 100), digits = 0)) %>% 
+  mutate(popchange = Total-lag(Total)) %>% 
+  mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
   filter(Year == 2016)
 
 ## 2016 Population by RD
-popn_sum <- popn %>%
-  group_by(Regional_District) %>%
-  filter(Year == 2016)
+popn_sum <- popn %>% filter(Year == 2016)
 
 ## df to separate Greater Vancouver from other RD with smaller population sizes and
 ## order other rd df based on 2016 population size
