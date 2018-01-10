@@ -35,7 +35,7 @@ Population growth in British Columbia is among the fastest in Canada.^1^ As the 
 
 * **British Columbia's population has increased continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2016, "popn_million"], 1)` million people living in British Columbia as of 2016.
 
-* **The majority of British Columbians live in the Greater Vancouver Regional District.** The estimated population size for Greater Vancouver was `r round(popsummary[popsummary$Regional_District == "Greater Vancouver", "Total"]/1000000, 1)` million people in 2016. The second largest population, at over 380,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
+* **The majority of British Columbians live in the Metro Vancouver Regional District.** The estimated population size for Metro Vancouver was `r round(popsummary[popsummary$Regional_District == "Metro Vancouver", "Total"]/1000000, 1)` million people in 2016. The second largest population, at over 380,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
 
 * **Regional population sizes have increased in southern B.C.** The Central Okanagan has seen the largest recent increase in population size---the population more than doubled from 1986 to 2016.
 
@@ -53,9 +53,9 @@ Population growth in British Columbia is among the fastest in Canada.^1^ As the 
 
 * British Columbia's population is not evenly distributed throughout the province.
 
-* The Greater Vancouver Regional District is home to over 50% of British Columbian's---it is B.C.'s largest and most dense population. The Capital and Fraser Valley Regional Districts each have more than 300,000 people. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
+* The Metro Vancouver Regional District is home to over 50% of British Columbian's---it is B.C.'s largest and most dense population. The Capital and Fraser Valley Regional Districts each have more than 300,000 people. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
 
-* Greater Vancouver has the highest population density with greater than 900 people per square kilometer, followed by the Capital Regional District with just over 150 people per square kilometer. Population density in most of B.C.'s regional districts is fewer than 10 people per square kilometer.
+* Metro Vancouver has the highest population density with greater than 900 people per square kilometer, followed by the Capital Regional District with just over 150 people per square kilometer. Population density in most of B.C.'s regional districts is fewer than 10 people per square kilometer.
 
 \vspace{20pt}
 
