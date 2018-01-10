@@ -36,9 +36,7 @@ chart_font_web <- "Verdana"
 ## @knitr line_plot
 
 ## simplifying rd sf map and aggregating small polygons for plotting
-plotmapsf <- ms_clip(rd, bc_bound())
-plotmapsf <- ms_simplify(plotmapsf, keep = .2)
-plotmapsf <- ms_dissolve(plotmapsf, field = "ADMIN_AREA_NAME")
+plotmapsf <- ms_simplify(rd, keep = .01)
 # plot(st_geometry(plotmapsf))
 
 ## converting sf to sp and then to df

@@ -91,13 +91,13 @@ rd <- combine_nr_rd() %>%
 # (diff2 <- setdiff(area_df$Regional_District, popn_sum$Regional_District))
 
 ## Clip out water, recalculate areas in km2
-rd_clip <- st_intersection(rd, bc_bound()) %>% 
+rd <- st_intersection(rd, bc_bound()) %>% 
   group_by(Regional_District) %>% 
   summarise() %>% 
   mutate(area = set_units(st_area(.), km^2))
 
 popn_den <- popn_sum %>% 
-  left_join(st_set_geometry(rd_clip, NULL), by = "Regional_District") %>% 
+  left_join(st_set_geometry(rd, NULL), by = "Regional_District") %>% 
   mutate(density = round(Total/as.numeric(area), 0))
 
 ## create density labels and categories for plotting density map
