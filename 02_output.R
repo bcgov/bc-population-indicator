@@ -173,11 +173,11 @@ svg_px("./out/barcharts.svg", width = 450, height = 500)
 multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
 dev.off()
 
-png_retina("./out/popn_viz.png", width = 550, height = 500, units = "px")
+svg_px("./out/popn_viz.svg", width = 550, height = 500)
 plot(popn_plot16)
 dev.off()
 
-png_retina("./out/popn_pctplot.png", width = 650, height = 550, units = "px")
+svg_px("./out/popn_pctplot.svg", width = 650, height = 550)
 plot(rd_plot)
 dev.off()
 
