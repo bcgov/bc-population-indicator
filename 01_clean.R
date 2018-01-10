@@ -69,13 +69,8 @@ popn_rest <- popn_sum %>%
   filter(Regional_District != "Greater Vancouver")
   
 ## Combine RDs with Northern Rockies Regional Municipality, fix names
-mun <- get_layer("municipalities") %>%
-  filter(ADMIN_AREA_ABBREVIATION == "NRRM") %>%
-  select(ADMIN_AREA_TYPE, ADMIN_AREA_NAME, SHAPE_Area, SHAPE)
-
-rd <- get_layer("regional_districts") %>%
+rd <- combine_nr_rd() %>%
   select(ADMIN_AREA_TYPE, ADMIN_AREA_NAME, SHAPE_Area, SHAPE) %>%
-  rbind(mun)  %>%
   mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "-", " - ")) %>%
   mutate(ADMIN_AREA_NAME = str_replace(
     ADMIN_AREA_NAME, c("Regional District of |Regional District| Regional Municipality"), "")) %>%
