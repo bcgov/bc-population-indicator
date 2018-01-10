@@ -109,10 +109,10 @@ popn_den$cat <- cut(popn_den$density, breaks = c(-1,10,60,200,1000),
 
 ## Calculate total change in population from 1986 to 2015 in regional districts
 popn_change <- popn %>% 
-  filter(Year == 1986 | Year == 2016) %>% 
+  filter(Year %in% c(1986, 2016)) %>% 
   group_by(Regional_District) %>% 
-  mutate(popchange = Total[Year==2016] - Total[Year==1986]) %>% 
-  mutate(percchange = round(((Total-lag(Total))/lag(Total) * 100), digits = 0)) %>% 
+  mutate(popchange = Total-lag(Total)) %>% 
+  mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
   filter(Year == 2016) %>% 
   select(-Year) 
  
