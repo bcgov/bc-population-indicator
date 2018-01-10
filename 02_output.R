@@ -41,7 +41,7 @@ plotmapsf <- ms_simplify(rd, keep = .01)
 
 ## converting sf to sp and then to df
 plotmap <- as(plotmapsf, "Spatial")
-plotmapdf <- fortify(plotmap, region = "ADMIN_AREA_NAME")
+plotmapdf <- fortify(plotmap, region = "Regional_District")
 
 ## joining population summary tabular and spatial data
 cd_plot <- left_join(plotmapdf, popsummary, by = c("id" = "Regional_District"))
@@ -120,6 +120,7 @@ names(colrs) <- catlab
 popn_plot16 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = cat)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey50", size = 0.3) +
+  coord_fixed() + 
   scale_fill_manual(values = colrs, drop = FALSE,
                     name = "2016\nPopulation Density\n(Population/km2)") +
   theme_minimal() +
@@ -142,6 +143,7 @@ pal <- c(brewer.pal(5, "YlOrBr")[5:1], brewer.pal(3, "Greys"))
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = percchange)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey50", size = 0.3) +
+  coord_fixed() + 
   scale_fill_gradientn(limits = c(-50, 115), colours = rev(pal), 
                        guide = (guide_colourbar(title = "Percent Change\nin Population (1986-2016)",
                                                 title.position = "bottom"))) +
@@ -178,3 +180,4 @@ dev.off()
 png_retina("./out/popn_pctplot.png", width = 650, height = 550, units = "px")
 plot(rd_plot)
 dev.off()
+
