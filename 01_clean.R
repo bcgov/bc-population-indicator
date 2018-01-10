@@ -28,11 +28,10 @@ bcregpopdata <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/pop
 bcpopdata <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/population/2018/BC annual population estimates.csv"
 
 ## read in and clean BC population CSV file
-popn_bc <-
-  read_csv(bcpopdata,
-           skip = 2,
-           n_max = 155,
-           col_types = "cn") %>%
+popn_bc <- read_csv(bcpopdata,
+                    skip = 2,
+                    n_max = 155,
+                    col_types = "cn") %>%
   rename(Population = `Population: June 1`) %>%
   na.omit() %>%
   filter(Year != "Year") %>%
