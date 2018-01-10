@@ -39,12 +39,15 @@ popn_bc <- read_csv(bcpopdata,
   mutate(popn_million = round(Population / 1000000, 2), 
          Year = as.integer(Year))
 
-## read in and clean BC population by Regional District CSV file
+## read in and clean BC population by Regional District CSV file - adjust names to official names
 popn <- read_csv(bcregpopdata) %>%
   select(Regional_District = `Regional District`, Year, Total) %>%
   filter(Regional_District != "British Columbia") %>%
-  mutate(popn_thousand = round(Total / 1000, 0)) %>%
-  mutate(Regional_District = str_replace(Regional_District, "-", " - "))
+  mutate(Regional_District = recode(Regional_District, 
+                                    `Skeena-Queen Charlotte` = "North Coast", 
+                                    `Greater Vancouver` = "Metro Vancouver"), 
+         Regional_District = str_replace(Regional_District, "-", " - "), 
+         popn_thousand = round(Total / 1000, 0))
 
 ## Calculate BC total and change for 1986 to 2016
 bctot <- read_csv(bcregpopdata) %>%
@@ -61,10 +64,10 @@ popn_sum <- popn %>% filter(Year == 2016)
 ## df to separate Greater Vancouver from other RD with smaller population sizes and
 ## order other rd df based on 2016 population size
 popn_gv <- popn_sum %>%
-  filter(Regional_District == "Greater Vancouver")
+  filter(Regional_District == "Metro Vancouver")
 
 popn_rest <- popn_sum %>%
-  filter(Regional_District != "Greater Vancouver")
+  filter(Regional_District != "Metro Vancouver")
   
 ## Combine RDs with Northern Rockies Regional Municipality, fix names to match those in the bcstats data
 rd <- combine_nr_rd() %>%
@@ -80,9 +83,7 @@ rd <- combine_nr_rd() %>%
          Regional_District = ifelse(Regional_District %in% c("Kootenay Boundary",
                                                              "Okanagan Similkameen",
                                                              "Thompson Nicola",
-                                                             "Bulkley Nechako",
-                                                             "Metro Vancouver",
-                                                             "North Coast"), 
+                                                             "Bulkley Nechako"), 
                                     str_replace(Regional_District, "\\s+", " - "), 
                                     Regional_District))
 
