@@ -15,7 +15,6 @@ library(dplyr) #data munging
 library(bcmaps) #for BC regional district map
 library(sf) #sf map object
 library(stringr) #modifying character strings
-library(rmapshaper) #map clipping
 library(units) #unit conversion
 
 ## Tabular data files publically available from BC Stats on-line:
@@ -93,21 +92,14 @@ rd <- combine_nr_rd() %>%
 # (diff2 <- setdiff(area_df$Regional_District, popn_sum$Regional_District))
 
 ## Clip out water, recalculate areas in km2
-rd_clip <- ms_clip(rd, bc_bound()) %>% 
-  st_area() %>% 
-  set_units(km^2)
-
-## 2016 Population Density population/km2
-## extract regional district area values
-area_df <- data.frame(Regional_District = rd$ADMIN_AREA_NAME,
-             area = rd_clip) %>% 
-  mutate(area = str_replace(area, " km^2", "")) %>% 
-  mutate(area = str_trim(area, side = "right")) %>%
-  mutate(area = round(as.integer(area), digits = 0))
+rd_clip <- st_intersection(rd, bc_bound()) %>% 
+  group_by(Regional_District) %>% 
+  summarise() %>% 
+  mutate(area = set_units(st_area(.), km^2))
 
 popn_den <- popn_sum %>% 
-  left_join(area_df, by = c("Regional_District" = "Regional_District")) %>% 
-  mutate(density = round(Total/(area), 0))
+  left_join(st_set_geometry(rd_clip, NULL), by = "Regional_District") %>% 
+  mutate(density = round(Total/as.numeric(area), 0))
 
 ## create density labels and categories for plotting density map
 catlab <- c("less than 10", "10 to 60", "61 to 200", "greater than 900")
