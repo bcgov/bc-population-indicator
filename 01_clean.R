@@ -68,20 +68,25 @@ popn_gv <- popn_sum %>%
 popn_rest <- popn_sum %>%
   filter(Regional_District != "Greater Vancouver")
   
-## Combine RDs with Northern Rockies Regional Municipality, fix names
+## Combine RDs with Northern Rockies Regional Municipality, fix names to match those in the bcstats data
 rd <- combine_nr_rd() %>%
-  select(ADMIN_AREA_TYPE, ADMIN_AREA_NAME, SHAPE_Area, SHAPE) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "-", " - ")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(
-    ADMIN_AREA_NAME, c("Regional District of |Regional District| Regional Municipality"), "")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Stikine  \\(Unincorporated\\)", "Stikine")) %>%
-  mutate(ADMIN_AREA_NAME = str_trim(ADMIN_AREA_NAME, side = "right")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Kootenay Boundary", "Kootenay - Boundary")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Okanagan Similkameen", "Okanagan - Similkameen")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Thompson Nicola", "Thompson - Nicola")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Bulkley Nechako", "Bulkley - Nechako")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "Metro Vancouver", "Greater Vancouver")) %>%
-  mutate(ADMIN_AREA_NAME = str_replace(ADMIN_AREA_NAME, "North Coast", "Skeena - Queen Charlotte"))
+  select(ADMIN_AREA_TYPE, Regional_District = ADMIN_AREA_NAME) %>%
+  mutate(Regional_District = str_replace(Regional_District, "-", " - "), 
+         Regional_District = str_replace(
+           Regional_District, 
+           c("Regional District of |Regional District| Regional Municipality"), ""
+         ), 
+         Regional_District = str_replace(Regional_District, 
+                                         "Stikine  \\(Unincorporated\\)", "Stikine"), 
+         Regional_District = str_trim(Regional_District, side = "both"), 
+         Regional_District = ifelse(Regional_District %in% c("Kootenay Boundary",
+                                                             "Okanagan Similkameen",
+                                                             "Thompson Nicola",
+                                                             "Bulkley Nechako",
+                                                             "Metro Vancouver",
+                                                             "North Coast"), 
+                                    str_replace(Regional_District, "\\s+", " - "), 
+                                    Regional_District))
 
 ## Check that RD names are matching and fix above with str_replace() before joining popn_sum & area_df
 # (diff1 <- setdiff(popn_sum$Regional_District, area_df$Regional_District))
