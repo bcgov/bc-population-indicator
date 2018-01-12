@@ -54,6 +54,7 @@ bctot <- read_csv(bcregpopdata) %>%
   select(Regional_District = `Regional District`, Year, Total) %>%
   filter(Regional_District == "British Columbia") %>% 
   filter(Year == 1986 | Year == 2016) %>% 
+  arrange(Year) %>% 
   mutate(popchange = Total-lag(Total)) %>% 
   mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
   filter(Year == 2016)
