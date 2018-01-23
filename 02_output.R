@@ -169,11 +169,11 @@ svg_px("./out/popn_line.svg", width = 650, height = 450)
 plot(bc_plot)
 dev.off()
 
-svg_px("./out/barcharts.svg", width = 450, height = 500)
+svg_px("./out/barcharts.svg", width = 500, height = 500)
 multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
 dev.off()
 
-svg_px("./out/popn_viz.svg", width = 550, height = 500)
+svg_px("./out/popn_viz.svg", width = 500, height = 500)
 plot(popn_plot16)
 dev.off()
 
