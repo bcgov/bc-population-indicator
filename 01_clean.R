@@ -10,6 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+library(curl) #pull data from web
 library(readr) #data import
 library(dplyr) #data munging
 library(bcmaps) #for BC regional district map
@@ -21,13 +22,18 @@ library(units) #unit conversion
 ## https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6
 ## [licence: B.C. Crown Copyright]
 
-## annual population data for BC from 1867-2017 downloaded directly from BC Stats
-bcregpopdata <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/population/2018/Population_Estimates.csv"
+## Download the British Columbia Total Population Estimates Data 1867-2017 (July 1st, 2017)
+tmp <- dir.create("tmp", showWarnings = FALSE)
+annual_file <- "http://www.bcstats.gov.bc.ca/Files/4c3818fd-052a-42ce-9363-2a4f426b3c02/BCannualpopulationestimates.csv"
+bcpopdata <- curl_download(annual_file, destfile = "tmp/annual_file.csv")
 
-## regional district population data from 1986-2016 downloaded via search tool here: https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx
-bcpopdata <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/population/2018/BC annual population estimates.csv"
+## Manually download and access the regional district population data from 1986-2016 
+## via online applicationtool here: https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx
+path <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/population/2018/"
+bcregpopdata <- paste0(path, "Population_Estimates.csv")
 
-## read in and clean BC population CSV file
+
+## Read in and clean BC population CSV file
 popn_bc <- read_csv(bcpopdata,
                     skip = 2,
                     n_max = 155,
@@ -35,11 +41,10 @@ popn_bc <- read_csv(bcpopdata,
   rename(Population = `Population: June 1`) %>%
   na.omit() %>%
   filter(Year != "Year") %>%
-  filter(Year != 2017) %>%
   mutate(popn_million = round(Population / 1000000, 2), 
          Year = as.integer(Year))
 
-## read in and clean BC population by Regional District CSV file - adjust names to official names
+## Read in and clean BC population by Regional District CSV file - adjust names to official names
 popn <- read_csv(bcregpopdata) %>%
   select(Regional_District = `Regional District`, Year, Total) %>%
   filter(Regional_District != "British Columbia") %>%
@@ -49,18 +54,19 @@ popn <- read_csv(bcregpopdata) %>%
          Regional_District = str_replace(Regional_District, "-", " - "), 
          popn_thousand = round(Total / 1000, 0))
 
-## Calculate BC total and change for 1986 to 2016
-bctot <- read_csv(bcregpopdata) %>%
-  select(Regional_District = `Regional District`, Year, Total) %>%
-  filter(Regional_District == "British Columbia") %>% 
-  filter(Year == 1986 | Year == 2016) %>% 
-  arrange(Year) %>% 
-  mutate(popchange = Total-lag(Total)) %>% 
-  mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
-  filter(Year == 2016)
+## Calculate BC population change for 1986 to 2017
+# bctot <- popn %>% 
+#   select(-popn_thousand) %>%
+#   filter(Year == 1986 | Year == 2017) %>% 
+#   arrange(Year) %>% 
+#   mutate(popchange = Total-lag(Total)) %>% 
+#   mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
+#   filter(Year == 2017)
 
-## 2016 Population by RD
-popn_sum <- popn %>% filter(Year == 2016)
+## 2017 Population by RD
+popn_sum <- popn %>% filter(Year == 2017) 
+popn_tot_from_RD <- popn_sum %>% pull(Total) %>% sum()
+popn_tot_from_RD
 
 ## df to separate Greater Vancouver from other RD with smaller population sizes and
 ## order other rd df based on 2016 population size
@@ -108,13 +114,13 @@ popn_den$cat <- cut(popn_den$density, breaks = c(-1,10,60,200,1000),
                     include.lowest=TRUE,
                     labels = catlab)
 
-## Calculate total change in population from 1986 to 2015 in regional districts
+## Calculate total change in population from 1986 to 2017 in regional districts
 popn_change <- popn %>% 
-  filter(Year %in% c(1986, 2016)) %>% 
+  filter(Year %in% c(1986, 2017)) %>% 
   group_by(Regional_District) %>% 
   mutate(popchange = Total-lag(Total)) %>% 
   mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
-  filter(Year == 2016) %>% 
+  filter(Year == 2017) %>% 
   select(-Year) 
  
 ## Combine density and change metrics into one df  
