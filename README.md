@@ -3,16 +3,24 @@
 
 # Trends in B.C.'s Population Size & Distribution 
 
-A set of R scripts to populate an indicator on trends in B.C.'s population size and distribution. These scripts reproduce the analysis published on [Environmental Reporting BC](http://www.env.gov.bc.ca/soe/indicators/sustainability/bc-population.html) in January 2018.
+A set of R scripts to populate an indicator on trends in B.C.'s population size and distribution. These scripts reproduce the analysis published on [Environmental Reporting BC](http://www.env.gov.bc.ca/soe/indicators/sustainability/bc-population.html).
 
 ## Usage
 
 ### Data
-The data for the indicator is publically available from [BC Stats](https://www2.gov.bc.ca/gov/content?id=6A488933DEC8411EBC659A5CD4AA92EF), the central statistical agency of the Province of British Columbia.
+The source data for the indicator is publically available from [BCStats](https://www2.gov.bc.ca/gov/content?id=6A488933DEC8411EBC659A5CD4AA92EF), the central statistical agency of the Province of British Columbia.
 
- - The 'Annual population, July 1, 1867-2017 (CSV)' file can be downloaded directly from the [BC Stats web page](https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6) (licence: [B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA)).
+(1) The '[Annual population, July 1, 1867-2017 (CSV)](http://www.bcstats.gov.bc.ca/Files/77762709-137c-4f9d-ac55-8edf7dea32a1/BCannualpopulationestimates.xls)' data file is downloaded directly from the [BCStats web page](https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6), distributed under the [Access Only - B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA) licence.
 
-- 'Population Estimates by B.C. Regional District for 1986- (CSV)' can be downloaded from the [BC Stats Sub-provincial Population Estimates search tool](https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx) (licence: [B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA)).
+(2) The 'Sub-provincial Population Estimates 1986-2017 (CSV)' data file ([Access Only - B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA) licence)  can be manually downloaded from the [BC Stats Sub-provincial Population Estimates search tool](https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx) following this manual query: 
+
+       + Select region type: Regional District
+       + Select regions: select all
+       + Select sex(es): Totals
+       + Select age group: Totals
+       + Generate output
+       + Export to CSV
+
 
 ### Code
 There are two core scripts that are required for the analysis, they need to be run in order:
@@ -22,13 +30,14 @@ There are two core scripts that are required for the analysis, they need to be r
 
 The `run_all.R` script can be `source`ed to run it all at once.
 
-Most packages used in the analysis can be installed from CRAN using `install.packages()`, but you will need to install [envreportutils](https://github.com/bcgov/envreportutils) using devtools:
+Most packages used in the analysis can be installed from CRAN using `install.packages()`, but you will need to install [`envreportutils`](https://github.com/bcgov/envreportutils) and [`patchwork`](https://github.com/thomasp85/patchwork) using devtools:
 
 ```r
 install.packages("devtools") # if you don't already have it installed
 
 library(devtools)
 install_github("bcgov/envreportutils")
+install_github("thomasp85/patchwork")
 ```
 
 ## Getting Help or Reporting an Issue
