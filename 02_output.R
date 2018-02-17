@@ -20,7 +20,7 @@ library(rprojroot) # for finding root of project
 library(rmapshaper) # simplify map
 library(sf) #sf ma
 library(dplyr) #for joining dataframes
-#library(patchwork) #combining 2 bar charts
+library(patchwork) #combining 2 bar charts
 
 ## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
@@ -59,7 +59,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.82 million people.",
            size = 5, family = "Verdana") +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
-  scale_x_continuous(limits = c(1867, 2016), breaks = seq(1881, 2016, 15), expand = c(0.02, 0)) +
+  scale_x_continuous(limits = c(1867, 2017), breaks = seq(1867, 2017, 15), expand = c(0.02, 0)) +
   scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
   theme(axis.text = element_text(size = 14),
@@ -71,7 +71,7 @@ plot(bc_plot)
 
 ## @knitr barcharts
 
-## plotting 2 barcharts for 2016 Greater Vancouver and other regional districts
+## plotting 2 barcharts for 2017 Greater Vancouver and other regional districts
 
 gv_barchart <- ggplot(data = popn_gv, aes(x = Regional_District, y = popn_thousand)) +
   geom_bar(stat = "identity", position = "identity", fill = "#767676", 
@@ -105,19 +105,19 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
         legend.position = "none",
         text = element_text(family = "Verdana"))
 
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(1.1, 0.13))
+# multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(1.1, 0.13))
 
 ## Using `patchwork`
-# rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
-# rest_barchart / gv_barchart
+rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
+
 
 ## @knitr plot16
 
-## plotting 2016 population density map
+## plotting 2017 population density map
 colrs <- c("#ffffe5", "#fee391", "#fe9929", "#662506")
 names(colrs) <- catlab
 
-popn_plot16 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = cat)) +
+popn_plot17 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = cat)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey50", size = 0.3) +
   coord_fixed() + 
@@ -132,7 +132,7 @@ popn_plot16 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
         legend.position = c(0.17, 0.15),
         plot.margin = unit(c(15, 5, 5, 5), "mm"),
         text = element_text(family = "Verdana"))
-plot(popn_plot16)  
+plot(popn_plot17)  
 
 ## @knitr change_map
 
@@ -145,7 +145,7 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = p
   geom_path(colour = "grey50", size = 0.3) +
   coord_fixed() + 
   scale_fill_gradientn(limits = c(-50, 115), colours = rev(pal), 
-                       guide = (guide_colourbar(title = "Percent Change\nin Population (1986-2016)",
+                       guide = (guide_colourbar(title = "Percent Change\nin Population (1986-2017)",
                                                 title.position = "bottom"))) +
   theme_minimal() +
   theme(axis.title = element_blank(),
@@ -170,11 +170,12 @@ plot(bc_plot)
 dev.off()
 
 svg_px("./out/barcharts.svg", width = 500, height = 500)
-multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
+#multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
+rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
 dev.off()
 
 svg_px("./out/popn_viz.svg", width = 500, height = 500)
-plot(popn_plot16)
+plot(popn_plot17)
 dev.off()
 
 svg_px("./out/popn_pctplot.svg", width = 650, height = 550)
