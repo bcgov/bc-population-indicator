@@ -64,16 +64,18 @@ popn <- read_csv(bcregpopdata) %>%
 #   filter(Year == 2017)
 
 ## 2017 Population by RD
-popn_sum <- popn %>% filter(Year == 2017) 
-popn_tot_from_RD <- popn_sum %>% pull(Total) %>% sum()
-popn_tot_from_RD
+popn_sum_by_RD_2017 <- popn %>% filter(Year == 2017) 
+
+## Total BC Population from both data files
+popn_tot_from_RD_2017 <- popn_sum_by_RD_2017 %>% pull(Total) %>% sum()
+popn_bc %>% filter(Year == 2017) %>% pull(Population)
 
 ## df to separate Greater Vancouver from other RD with smaller population sizes and
 ## order other rd df based on 2016 population size
-popn_gv <- popn_sum %>%
+popn_gv <- popn_sum_by_RD_2017 %>%
   filter(Regional_District == "Metro Vancouver")
 
-popn_rest <- popn_sum %>%
+popn_rest <- popn_sum_by_RD_2017 %>%
   filter(Regional_District != "Metro Vancouver")
   
 ## Combine RDs with Northern Rockies Regional Municipality, fix names to match those in the bcstats data
@@ -104,7 +106,7 @@ rd <- st_intersection(rd, bc_bound()) %>%
   summarise() %>% 
   mutate(area = set_units(st_area(.), km^2))
 
-popn_den <- popn_sum %>% 
+popn_den <- popn_sum_by_RD_2017 %>% 
   left_join(st_set_geometry(rd, NULL), by = "Regional_District") %>% 
   mutate(density = round(Total/as.numeric(area), 0))
 
@@ -130,5 +132,5 @@ popsummary <- popn_change %>%
 
 # Create tmp folder if not already there and store objects in local repository
 if (!exists("tmp")) dir.create("tmp", showWarnings = FALSE)
-save(catlab, bctot, popn_bc, popn_gv, popn_rest, rd, popsummary, file = "tmp/sumdata.RData")
+save(popn_bc, catlab, popn_gv, popn_rest, rd, popsummary, file = "tmp/sumdata.RData")
 
