@@ -18,6 +18,7 @@ library(RColorBrewer) #for colour palette
 library(png) #for inserting image to plot
 library(grid) #for creating grid graphic
 library(rprojroot) #for finding root of project
+library(patchwork) #combining 2 bar charts
 
 ## Find the root of the project so we can find the files in the directory tree.
 root <- rprojroot::is_rstudio_project
@@ -31,33 +32,33 @@ knitr::read_chunk(root$find_file("02_output.R"))
 
 ```{r pre}
 ```
-Population growth in British Columbia is among the fastest in Canada.^1^ As the number of people living in the province increases so does pressure on the environment---for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
+The number of people living in British Columbia has increased faster than the national average.^1^ As the number of people living in the province increases so does pressure on the environment---for example, through land use changes, increasing water demand, waste production, or emissions of pollutants. This indicator reports on the status and trends in British Columbia's population size and distribution for the province and among regional districts.
 
-* **British Columbia's population has increased continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2016, "popn_million"], 1)` million people living in British Columbia as of 2016.
+* **British Columbia's population has increased continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2017, "popn_million"], 1)` million people living in British Columbia as of 2017.
 
-* **The majority of British Columbians live in the Metro Vancouver Regional District.** The estimated population size for Metro Vancouver was `r round(popsummary[popsummary$Regional_District == "Metro Vancouver", "Total"]/1000000, 1)` million people in 2016. The second largest population, at over 380,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
+* **The majority of British Columbians live in the Metro Vancouver Regional District.** The estimated population size for Metro Vancouver was `r round(popsummary[popsummary$Regional_District == "Metro Vancouver", "Total"]/1000000, 1)` million people in 2017. The second largest population, at over 390,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
 
-* **Regional population sizes have increased in southern B.C.** The Central Okanagan has seen the largest recent increase in population size---the population more than doubled from 1986 to 2016.
+* **Regional population sizes have increased in southern B.C.** The Central Okanagan and Squamish-Lillooet Regional Districts have seen the largest recent increases in population size---the population more than doubled from 1986 to 2017 in both of these Regional Districts.
 
-* **Regional population sizes have decreased in the northwestern B.C.** The Stikine has seen the largest recent decrease in population size, with the 2016 population approximately half what it was in 1986. Population sizes in regional districts in central British Columbia, including Cariboo and Fraser-Fort George, experienced almost no change in estimated population size since 1986.
-\newpage
+* **Regional population sizes have decreased in northwestern B.C.** The Stikine has seen the largest recent decrease in population size, with the 2017 population approximately half what it was in 1986. 
 
-## Long-term Change in British Columbia's Population Size (1867-2016)
+
+## Long-term Change in British Columbia's Population Size (1867-2017)
 
 ```{r line_plot, fig.width=13, fig.asp=7/13}
 ```
 
 \newpage
 
-## B.C. Population Size & Density by Regional District (2016)
+## B.C. Population Size & Density by Regional District (2017)
 
 * British Columbia's population is not evenly distributed throughout the province.
 
-* The Metro Vancouver Regional District is home to over 50% of British Columbian's---it is B.C.'s largest and most dense population. The Capital and Fraser Valley Regional Districts each have more than 300,000 people. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
+* The Metro Vancouver Regional District is home to over 50% of British Columbian's---it is B.C.'s largest and most dense regional population. The Capital and Fraser Valley Regional Districts each have more than 300,000 people. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
 
 * Metro Vancouver has the highest population density with greater than 900 people per square kilometer, followed by the Capital Regional District with just over 150 people per square kilometer. Population density in most of B.C.'s regional districts is fewer than 10 people per square kilometer.
 
-\vspace{20pt}
+\vspace{10pt}
 
 ```{r barcharts, fig.height = 11, fig.width = 10}
 ```
@@ -69,12 +70,12 @@ Population growth in British Columbia is among the fastest in Canada.^1^ As the 
 
 \newpage
 
-## B.C. Population Change by Regional District (1986-2016)
-* British Columbia's population increased by 58% from 1986 to 2016; this was higher than Canada's 37% increase over a similar period.^1^
+## B.C. Population Change by Regional District (1986-2017)
+* British Columbia's population increased by 60% from 1986 to 2017.
 
-* The Central Okanagan has seen the largest population increase---112% since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional District have all experienced large increases in population size (greater than 80%).
+* The Central Okanagan has seen the largest population increase---114% since 1986. Squamish-Lillooet, Fraser Valley, and the Nanaimo Regional District have all experienced large increases in population size (greater than 85%).
 
-* The Stikine has seen the largest decrease in population size, a 49% decline, since 1986. The North Coast and Mount Waddington Regional Districts have also experienced recent declines in population size.
+* The Stikine has seen the largest decrease in population size, a 50% decline, since 1986. The North Coast and Mount Waddington Regional Districts have also experienced large declines in population size.
 
 \vspace{20pt}
 
@@ -92,8 +93,8 @@ This indicator is based on data sourced from [BC Stats](https://www2.gov.bc.ca/g
 
 [Statistics Canada: Population and Demography](http://www5.statcan.gc.ca/subject-sujet/theme-theme.action?pid=3867&lang=eng&more=0)
 
-^1^Annual Estimates of Population for Canada, Provinces and Territories, from July 1, 1971 to July 1, 2015. Newfoundland & Labrador Statistics Agency (published 09/29/15)(pdf):
-<http://www.stats.gov.nl.ca/statistics/population/PDF/Annual_Pop_Prov.PDF>
+^1^[Population size and growth in Canada: Key results from the 2016 Census (Statistics Canada )](http://www.statcan.gc.ca/daily-quotidien/170208/dq170208a-eng.htm)
+<http://www.statcan.gc.ca/daily-quotidien/170208/dq170208a-eng.htm>
 
 
 ## Data
@@ -103,11 +104,11 @@ This indicator is based on data sourced from [BC Stats](https://www2.gov.bc.ca/g
 * British Columbia Annual Population Estimates (1867-2017):  <https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6>
     - Licence: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
 
-* Total Population by Regional Districts in B.C. (1986-2016): <https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx>
+* Total Population by Regional Districts in B.C. (1986-2017): <https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx>
     - Licence: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
 
 
-Published and Available On-Line at Environmental Reporting BC (January
+Published and Available On-Line at Environmental Reporting BC (March
 2018):
 <http://www.env.gov.bc.ca/soe/indicators/sustainability/bc-population.html>
 
