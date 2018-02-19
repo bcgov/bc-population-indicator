@@ -55,13 +55,13 @@ popn <- read_csv(bcregpopdata) %>%
          popn_thousand = round(Total / 1000, 0))
 
 ## Calculate BC population change for 1986 to 2017
-# bctot <- popn %>% 
-#   select(-popn_thousand) %>%
-#   filter(Year == 1986 | Year == 2017) %>% 
-#   arrange(Year) %>% 
-#   mutate(popchange = Total-lag(Total)) %>% 
-#   mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
-#   filter(Year == 2017)
+bc_pop_change <- popn_bc %>% 
+  filter(Year %in% c(1986, 2017)) %>%
+  mutate(popchange = Population-lag(Population)) %>% 
+  mutate(percchange = round((popchange/lag(Population) * 100), digits = 0)) %>% 
+  filter(Year == 2017) %>% 
+  select(-Year) 
+  
 
 ## 2017 Population by RD
 popn_sum_by_RD_2017 <- popn %>% filter(Year == 2017) 
