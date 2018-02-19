@@ -56,7 +56,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
   xlab("") +
   ylab("B.C. Population (Million)") +
-  annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.82 million people.",
+  annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.8 million people.",
            size = 5, family = "Verdana") +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
   scale_x_continuous(limits = c(1867, 2017), breaks = seq(1867, 2017, 15), expand = c(0.02, 0)) +
@@ -122,7 +122,7 @@ popn_plot17 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
   geom_path(colour = "grey50", size = 0.3) +
   coord_fixed() + 
   scale_fill_manual(values = colrs, drop = FALSE,
-                    name = "2017\nPopulation Density\n(Population/km2)") +
+                    name = "201\nPopulation Density\n(Population/km2)") +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
