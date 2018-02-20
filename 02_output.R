@@ -59,7 +59,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.8 million people.",
            size = 5, family = "Verdana") +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
-  scale_x_continuous(limits = c(1867, 2017), breaks = seq(1867, 2017, 15), expand = c(0.02, 0)) +
+  scale_x_continuous(limits = c(1867, 2019), breaks = seq(1867, 2017, 15), expand = c(0.02, 0)) +
   scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
   theme_soe() +
   theme(axis.text = element_text(size = 14),
@@ -80,7 +80,7 @@ gv_barchart <- ggplot(data = popn_gv, aes(x = Regional_District, y = popn_thousa
   labs(ylab("Population (*1000)")) +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 2500, 500), limits = c(0, 2600)) +
+  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 2500, 500), limits = c(0, 2610)) +
   theme_soe() +
   theme(axis.title.y = element_blank(),
         axis.title.x = element_text(margin = margin(10, 0, 0, 0), size = 14),
@@ -95,7 +95,7 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
   geom_bar(stat = "identity", colour = "grey30", size = 0.3, alpha = 0.9, fill = "#ececec") +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 400)) +
+  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 415)) +
   theme_soe() +
   theme(axis.title = element_blank(),
         axis.text.x = element_text(size = 12),

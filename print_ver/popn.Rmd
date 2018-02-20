@@ -36,16 +36,16 @@ The number of people living in British Columbia has increased faster than the na
 
 * **British Columbia's population has increased continuously in the last century.** There were an estimated `r round(popn_bc[popn_bc$Year == 2017, "popn_million"], 1)` million people living in British Columbia as of 2017.
 
-* **The majority of British Columbians live in the Metro Vancouver Regional District.** The estimated population size for Metro Vancouver was `r round(popsummary[popsummary$Regional_District == "Metro Vancouver", "Total"]/1000000, 1)` million people in 2017. The second largest population, at over 390,000 people, falls within the Capital Regional District. The third and fourth largest populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
+* **The majority of British Columbians live in the Metro Vancouver Regional District.** The estimated population size for Metro Vancouver was `r round(popsummary[popsummary$Regional_District == "Metro Vancouver", "Total"]/1000000, 1)` million people in 2017. The second largest regional population, at over 390,000 people, falls within the Capital Regional District. The third and fourth largest regional populations in B.C. are in the Fraser Valley and the Central Okanagan Regional Districts.
 
-* **Regional population sizes have increased in southern B.C.** The Central Okanagan and Squamish-Lillooet Regional Districts have seen the largest recent increases in population size---the population more than doubled from 1986 to 2017 in both of these Regional Districts.
+* **Regional population sizes have increased in southern B.C.** The Central Okanagan and Squamish-Lillooet Regional Districts have seen the largest recent regional increases in population size---the population more than doubled from 1986 to 2017 in both of these Regional Districts.
 
-* **Regional population sizes have decreased in northwestern B.C.** The Stikine has seen the largest recent decrease in population size, with the 2017 population approximately half what it was in 1986. 
+* **Regional population sizes have decreased in northwestern B.C.** The Stikine has seen the largest recent decrease in regional population size, with the 2017 Stikine population approximately half what it was in 1986. 
 
 
 ## Long-term Change in British Columbia's Population Size (1867-2017)
 
-```{r line_plot, fig.width=13, fig.asp=7/13}
+```{r line_plot, fig.width=11, fig.asp=7/11}
 ```
 
 \newpage
@@ -60,7 +60,7 @@ The number of people living in British Columbia has increased faster than the na
 
 \vspace{10pt}
 
-```{r barcharts, fig.height = 11, fig.width = 10}
+```{r barcharts, fig.height = 10, fig.width = 10}
 ```
 
 \newpage
@@ -73,9 +73,9 @@ The number of people living in British Columbia has increased faster than the na
 ## B.C. Population Change by Regional District (1986-2017)
 * British Columbia's population increased by 60% from 1986 to 2017.
 
-* The Central Okanagan has seen the largest population increase---114% since 1986. Squamish-Lillooet, Fraser Valley, and the Nanaimo Regional District have all experienced large increases in population size (greater than 85%).
+* The Central Okanagan has seen the largest regional population increase---114% since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional Districts have all experienced large increases in population size (greater than 85%).
 
-* The Stikine has seen the largest decrease in population size, a 50% decline, since 1986. The North Coast and Mount Waddington Regional Districts have also experienced large declines in population size.
+* The Stikine has seen the largest decrease in regional population size, a 50% decline, since 1986. The North Coast and Mount Waddington Regional Districts have also experienced recent large declines in population size.
 
 \vspace{20pt}
 
@@ -93,7 +93,7 @@ This indicator is based on data sourced from [BC Stats](https://www2.gov.bc.ca/g
 
 [Statistics Canada: Population and Demography](http://www5.statcan.gc.ca/subject-sujet/theme-theme.action?pid=3867&lang=eng&more=0)
 
-^1^[Population size and growth in Canada: Key results from the 2016 Census (Statistics Canada )](http://www.statcan.gc.ca/daily-quotidien/170208/dq170208a-eng.htm)
+^1^[Population size and growth in Canada: Key results from the 2016 Census (Statistics Canada)](http://www.statcan.gc.ca/daily-quotidien/170208/dq170208a-eng.htm)
 
 
 ## Data

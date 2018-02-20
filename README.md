@@ -3,14 +3,14 @@
 
 # Trends in B.C.'s Population Size & Distribution 
 
-A set of R scripts to populate an indicator on trends in B.C.'s population size and distribution. These scripts reproduce the analysis published on [Environmental Reporting BC](http://www.env.gov.bc.ca/soe/indicators/sustainability/bc-population.html).
+A set of R scripts to populate an indicator on trends in B.C.'s population size and distribution. These scripts reproduce the analysis and plots published on [Environmental Reporting BC](http://www.env.gov.bc.ca/soe/indicators/sustainability/bc-population.html).
 
 ## Usage
 
 ### Data
-The source data for the indicator is publically available from [BCStats](https://www2.gov.bc.ca/gov/content?id=6A488933DEC8411EBC659A5CD4AA92EF), the central statistical agency of the Province of British Columbia.
+The source data for the indicator is publically available from [BC Stats](https://www2.gov.bc.ca/gov/content?id=6A488933DEC8411EBC659A5CD4AA92EF), the central statistical agency of the Province of British Columbia.
 
-(1) The '[Annual population, July 1, 1867-2017 (CSV)](http://www.bcstats.gov.bc.ca/Files/77762709-137c-4f9d-ac55-8edf7dea32a1/BCannualpopulationestimates.xls)' data file is downloaded directly from the [BCStats web page](https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6), distributed under the [Access Only - B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA) licence.
+(1) The '[Annual population, July 1, 1867-2017 (CSV)](http://www.bcstats.gov.bc.ca/Files/77762709-137c-4f9d-ac55-8edf7dea32a1/BCannualpopulationestimates.xls)' data file is downloaded directly from the [BC Stats web page](https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6), distributed under the [Access Only - B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA) licence.
 
 (2) The 'Sub-provincial Population Estimates 1986-2017 (CSV)' data file ([Access Only - B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA) licence)  can be manually downloaded from the [BC Stats Sub-provincial Population Estimates search tool](https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx) following this manual query: 
 
