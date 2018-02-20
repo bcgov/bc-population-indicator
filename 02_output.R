@@ -122,7 +122,7 @@ popn_plot17 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill
   geom_path(colour = "grey50", size = 0.3) +
   coord_fixed() + 
   scale_fill_manual(values = colrs, drop = FALSE,
-                    name = "201\nPopulation Density\n(Population/km2)") +
+                    name = "2017\nPopulation Density\n(Population/km2)") +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),

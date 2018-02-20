@@ -94,18 +94,15 @@ This indicator is based on data sourced from [BC Stats](https://www2.gov.bc.ca/g
 [Statistics Canada: Population and Demography](http://www5.statcan.gc.ca/subject-sujet/theme-theme.action?pid=3867&lang=eng&more=0)
 
 ^1^[Population size and growth in Canada: Key results from the 2016 Census (Statistics Canada )](http://www.statcan.gc.ca/daily-quotidien/170208/dq170208a-eng.htm)
-<http://www.statcan.gc.ca/daily-quotidien/170208/dq170208a-eng.htm>
 
 
 ## Data
 
 \*By accessing these datasets, you agree to the licence associated with each file, as indicated in parentheses below.
 
-* British Columbia Annual Population Estimates (1867-2017):  <https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6>
-    - Licence: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
+* [British Columbia Annual Population Estimates (1867-2017)](https://www2.gov.bc.ca/gov/content?id=36D1A7A4BEE248598281824C13CB65B6) (Licence: [B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content/home/copyright))
 
-* Total Population by Regional Districts in B.C. (1986-2017): <https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx>
-    - Licence: B.C. Crown Copyright: <http://www2.gov.bc.ca/gov/content/home/copyright>
+* [Total Population by Regional Districts in B.C. (1986-2017)](https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx) (Licence: [B.C. Crown Copyright](http://www2.gov.bc.ca/gov/content/home/copyright))
 
 
 Published and Available On-Line at Environmental Reporting BC (March
