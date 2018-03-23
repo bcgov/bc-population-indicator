@@ -11,13 +11,13 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 
-library(envreportbc) #for pdf font output
+library(envreportutils.internal) #for pdf output template
 
 source("01_clean.R")
 source("02_output.R")
 
 ## Make print version
 mon_year <- format(Sys.Date(), "%B%Y")
-outfile <- paste0("EnvReportBC_BC_population_", mon_year, ".pdf")
+outfile <- paste0("envreportbc_bc_population_", mon_year, ".pdf")
 rmarkdown::render("print_ver/popn.Rmd", output_file = outfile)
 extrafont::embed_fonts(file.path("print_ver/", outfile))
