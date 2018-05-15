@@ -104,7 +104,7 @@ rd <- combine_nr_rd() %>%
 rd <- st_intersection(rd, bc_bound()) %>% 
   group_by(Regional_District) %>% 
   summarise() %>% 
-  mutate(area = set_units(st_area(.), km^2))
+  mutate(area = as.numeric(set_units(st_area(.), km^2)))
 
 popn_den <- popn_sum_by_RD_2017 %>% 
   left_join(st_set_geometry(rd, NULL), by = "Regional_District") %>% 
