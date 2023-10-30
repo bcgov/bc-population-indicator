@@ -135,21 +135,31 @@ popn_den$cat <- cut(
                     include.lowest=TRUE,
                     labels = catlab)
 
-## Calculate total change in population from 1986 to 2017 in regional districts
+## Calculate total change in population from 1986 to current in regional districts
 popn_change <- popn %>% 
   filter(Year %in% c(min(Year), max(Year))) %>% 
   group_by(Regional_District) %>% 
   mutate(popchange = Population-lag(Population)) %>% 
-  mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
+  mutate(percchange = round((popchange/lag(Population) * 100), digits = 0)) %>% 
   filter(Year == max(Year)) %>% 
   select(-Year) 
+
+## Calculate year-on-year change
+popn_change_range = popn %>%
+  group_by(Regional_District) %>%
+  mutate(popchange = Population - Population[Year == min(Year)],
+         percchange = round((popchange/lag(Population) * 100), digits = 0)) 
  
 ## Combine density and change metrics into one df  
 popsummary <- popn_change %>% 
   select(Regional_District, popchange, percchange) %>% 
   left_join(popn_den, by = "Regional_District")
 
+popsummary_year = popn_change_range %>%
+  select(Regional_District, popchange, percchange) %>%
+  left_join(rd)
+
 # Create tmp folder if not already there and store objects in local repository
 if (!exists("tmp")) dir.create("tmp", showWarnings = FALSE)
-save(popn_bc, catlab, popn_gv, popn_rest, rd, popsummary, file = "tmp/sumdata.RData")
+save(popn_bc, catlab, popn_mv, popn_rest, rd, popsummary, popsummary_year, file = "tmp/sumdata.RData")
 
