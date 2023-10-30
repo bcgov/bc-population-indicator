@@ -6,6 +6,7 @@ data/
 out/
 tmp/
 img/
+app/
 print_ver/*.pdf
 print_ver/source_image/
 internal.R
