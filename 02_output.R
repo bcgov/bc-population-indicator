@@ -52,15 +52,16 @@ img <- readPNG(img_path)
 g <- rasterGrob(img, interpolate = TRUE)
 
 ## plotting long-term BC population line graph
+max_year = max(popn_bc$Year)
 bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   geom_line(colour = "#a63603", size = 1.5, alpha = 0.8) +
   xlab("") +
   ylab("B.C. Population (Million)") +
-  annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 4.8 million people.",
+  annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 5.32 million people.",
            size = 5, family = "Verdana") +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
-  scale_x_continuous(limits = c(1867, 2019), breaks = seq(1867, 2017, 15), expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(0, 5), expand = c(0.04, 0)) +
+  scale_x_continuous(limits = c(1867, max_year), breaks = seq(1867, max_year, 31), expand = c(0.02, 0)) +
+  scale_y_continuous(limits = c(0, 5.5), expand = c(0.04, 0), breaks = seq(0,5, 1)) +
   theme_soe() +
   theme(axis.text = element_text(size = 14),
         panel.grid = element_blank(),
