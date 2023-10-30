@@ -64,46 +64,46 @@ popn <- read_csv(bcregpopdata) %>%
   select(Regional_District = `Regional District`, Year, Population = `Pop`) %>%
   filter(Regional_District != "British Columbia") %>%
   mutate(
-    # Regional_District = recode(Regional_District, 
-    #                                 `Skeena-Queen Charlotte` = "North Coast", 
-    #                                 `Greater Vancouver` = "Metro Vancouver"), 
          Regional_District = str_replace(Regional_District, "-", " - "), 
+         Regional_District = recode(Regional_District,
+                                    `Powell River` = "qathet",
+                                    `Columbia - Shuswap` = "Columbia Shuswap"),
          popn_thousand = round(Population / 1000, 0))
 
 ## Calculate BC population change for 1986 to 2017
 bc_pop_change <- popn_bc %>% 
-  filter(Year %in% c(1986, 2017)) %>%
+  filter(Year %in% c(1986, max(Year))) %>%
   mutate(popchange = Population-lag(Population)) %>% 
   mutate(percchange = round((popchange/lag(Population) * 100), digits = 0)) %>% 
-  filter(Year == 2017) %>% 
+  filter(Year == max(Year)) %>% 
   select(-Year) 
   
 
-## 2017 Population by RD
-popn_sum_by_RD_2017 <- popn %>% filter(Year == 2017) 
+## Current Population by RD
+popn_sum_by_RD_current <- popn %>% filter(Year == max(Year)) 
 
-## Total BC Population from both data files
-popn_tot_from_RD_2017 <- popn_sum_by_RD_2017 %>% pull(Total) %>% sum()
-popn_bc %>% filter(Year == 2017) %>% pull(Population)
+## Total BC Population from both data files - check if match
+popn_tot_from_RD_current <- popn_sum_by_RD_current %>% pull(Population) %>% sum()
+popn_bc %>% filter(Year == max(Year)) %>% pull(Population)
 
-## df to separate Greater Vancouver from other RD with smaller population sizes and
-## order other rd df based on 2016 population size
-popn_gv <- popn_sum_by_RD_2017 %>%
+## df to separate Metro Vancouver from other RD with smaller population sizes and
+## order other rd df based on current population size
+popn_mv <- popn_sum_by_RD_current %>%
   filter(Regional_District == "Metro Vancouver")
 
-popn_rest <- popn_sum_by_RD_2017 %>%
+popn_rest <- popn_sum_by_RD_current %>%
   filter(Regional_District != "Metro Vancouver")
   
 ## Combine RDs with Northern Rockies Regional Municipality, fix names to match those in the bcstats data
 rd <- combine_nr_rd() %>%
-  select(ADMIN_AREA_TYPE, Regional_District = ADMIN_AREA_NAME) %>%
+  select(ADMIN_AREA_BOUNDARY_TYPE, Regional_District = ADMIN_AREA_NAME) %>%
   mutate(Regional_District = str_replace(Regional_District, "-", " - "), 
          Regional_District = str_replace(
            Regional_District, 
            c("Regional District of |Regional District| Regional Municipality"), ""
          ), 
          Regional_District = str_replace(Regional_District, 
-                                         "Stikine  \\(Unincorporated\\)", "Stikine"), 
+                                         "Stikine Region \\(Unincorporated\\)", "Stikine"), 
          Regional_District = str_trim(Regional_District, side = "both"), 
          Regional_District = ifelse(Regional_District %in% c("Kootenay Boundary",
                                                              "Okanagan Similkameen",
@@ -113,7 +113,7 @@ rd <- combine_nr_rd() %>%
                                     Regional_District))
 
 ## Check that RD names are matching and fix above with str_replace() before joining popn_sum & area_df
-# (diff1 <- setdiff(popn_sum$Regional_District, area_df$Regional_District))
+# (diff1 <- setdiff(popn_sum_by_RD_current$Regional_District, rd$Regional_District))
 # (diff2 <- setdiff(area_df$Regional_District, popn_sum$Regional_District))
 
 ## Clip out water, recalculate areas in km2
@@ -122,23 +122,26 @@ rd <- st_intersection(rd, bc_bound()) %>%
   summarise() %>% 
   mutate(area = as.numeric(set_units(st_area(.), km^2)))
 
-popn_den <- popn_sum_by_RD_2017 %>% 
+popn_den <- popn_sum_by_RD_current %>% 
   left_join(st_set_geometry(rd, NULL), by = "Regional_District") %>% 
-  mutate(density = round(Total/as.numeric(area), 0))
+  mutate(density = round(Population/as.numeric(area), 0))
 
 ## create density labels and categories for plotting density map
-catlab <- c("less than 10", "10 to 60", "61 to 200", "greater than 900")
-popn_den$cat <- cut(popn_den$density, breaks = c(-1,10,60,200,1000),
+# catlab <- c("less than 10", "10 to 60", "61 to 200", "greater than 900")
+catlab = c("0 - 2","2 - 5", "5 - 10", " 10 - 50", "50 - 100", "100 - 1000", "> 1000")
+popn_den$cat <- cut(
+  # popn_den$density, breaks = c(-1,10,60,200,1000),
+  popn_den$density, breaks = c(-1, 2, 5,10, 50, 100, 1000, 1100),
                     include.lowest=TRUE,
                     labels = catlab)
 
 ## Calculate total change in population from 1986 to 2017 in regional districts
 popn_change <- popn %>% 
-  filter(Year %in% c(1986, 2017)) %>% 
+  filter(Year %in% c(min(Year), max(Year))) %>% 
   group_by(Regional_District) %>% 
-  mutate(popchange = Total-lag(Total)) %>% 
+  mutate(popchange = Population-lag(Population)) %>% 
   mutate(percchange = round((popchange/lag(Total) * 100), digits = 0)) %>% 
-  filter(Year == 2017) %>% 
+  filter(Year == max(Year)) %>% 
   select(-Year) 
  
 ## Combine density and change metrics into one df  
