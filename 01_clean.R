@@ -24,35 +24,51 @@ library(units) #unit conversion
 
 ## Download the British Columbia Total Population Estimates Data 1867-2017 (July 1st, 2017)
 tmp <- dir.create("tmp", showWarnings = FALSE)
-annual_file <- "http://www.bcstats.gov.bc.ca/Files/4c3818fd-052a-42ce-9363-2a4f426b3c02/BCannualpopulationestimates.csv"
+annual_file <- "https://www2.gov.bc.ca/assets/gov/data/statistics/people-population-community/population/pop_bc_annual_estimates.csv"
 bcpopdata <- curl_download(annual_file, destfile = "tmp/annual_file.csv")
 
 ## Manually download and access the regional district population data from 1986-2016 
 ## via online applicationtool here: https://www.bcstats.gov.bc.ca/apps/PopulationEstimates.aspx
-path <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/population/2018/"
-bcregpopdata <- paste0(path, "Population_Estimates.csv")
+# path <- "~/soe_pickaxe/Operations ORCS/Data - Working/sustainability/population/2018/"
+bcregpopdata <- "data/Population_Projections.csv"
 
 
 ## Read in and clean BC population CSV file
-popn_bc <- read_csv(bcpopdata,
+popn_bc_1 = read_csv(bcpopdata,
                     skip = 2,
-                    n_max = 155,
+                    n_max = 104,
                     col_types = "cn") %>%
   rename(Population = `Population: June 1`) %>%
+  select(Year, Population) %>%
   na.omit() %>%
   filter(Year != "Year") %>%
   mutate(popn_million = round(Population / 1000000, 2), 
          Year = as.integer(Year))
 
+popn_bc_2 = read_csv(bcpopdata,
+                     skip = 109,
+                     n_max = 52,
+                     col_types = "cn") %>%
+  rename(Population = `Population: July 1`) %>%
+  select(Year, Population) %>%
+  na.omit() %>%
+  filter(Year != "Year") %>%
+  mutate(popn_million = round(Population / 1000000, 2), 
+         Year = as.integer(Year))
+
+popn_bc = bind_rows(popn_bc_1,
+                    popn_bc_2)
+
 ## Read in and clean BC population by Regional District CSV file - adjust names to official names
 popn <- read_csv(bcregpopdata) %>%
-  select(Regional_District = `Regional District`, Year, Total) %>%
+  select(Regional_District = `Regional District`, Year, Population = `Pop`) %>%
   filter(Regional_District != "British Columbia") %>%
-  mutate(Regional_District = recode(Regional_District, 
-                                    `Skeena-Queen Charlotte` = "North Coast", 
-                                    `Greater Vancouver` = "Metro Vancouver"), 
+  mutate(
+    # Regional_District = recode(Regional_District, 
+    #                                 `Skeena-Queen Charlotte` = "North Coast", 
+    #                                 `Greater Vancouver` = "Metro Vancouver"), 
          Regional_District = str_replace(Regional_District, "-", " - "), 
-         popn_thousand = round(Total / 1000, 0))
+         popn_thousand = round(Population / 1000, 0))
 
 ## Calculate BC population change for 1986 to 2017
 bc_pop_change <- popn_bc %>% 
