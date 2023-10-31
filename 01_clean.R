@@ -62,7 +62,6 @@ popn_bc = bind_rows(popn_bc_1,
 ## Read in and clean BC population by Regional District CSV file - adjust names to official names
 popn <- read_csv(bcregpopdata) %>%
   select(Regional_District = `Regional District`, Year, Population = `Pop`) %>%
-  filter(Regional_District != "British Columbia") %>%
   mutate(
          Regional_District = str_replace(Regional_District, "-", " - "), 
          Regional_District = recode(Regional_District,
@@ -140,7 +139,7 @@ popn_change <- popn %>%
   filter(Year %in% c(min(Year), max(Year))) %>% 
   group_by(Regional_District) %>% 
   mutate(popchange = Population-lag(Population)) %>% 
-  mutate(percchange = round((popchange/lag(Population) * 100), digits = 0)) %>% 
+  mutate(percchange = round((popchange/Population * 100), digits = 0)) %>% 
   filter(Year == max(Year)) %>% 
   select(-Year) 
 
@@ -148,7 +147,8 @@ popn_change <- popn %>%
 popn_change_range = popn %>%
   group_by(Regional_District) %>%
   mutate(popchange = Population - Population[Year == min(Year)],
-         percchange = round((popchange/lag(Population) * 100), digits = 0)) 
+         percchange = round((popchange/Population * 100), digits = 0),
+         percchange = replace_na(percchange, 0))
  
 ## Combine density and change metrics into one df  
 popsummary <- popn_change %>% 
@@ -156,7 +156,7 @@ popsummary <- popn_change %>%
   left_join(popn_den, by = "Regional_District")
 
 popsummary_year = popn_change_range %>%
-  select(Regional_District, popchange, percchange) %>%
+  select(Regional_District, Year, popchange, percchange) %>%
   left_join(rd)
 
 # Create tmp folder if not already there and store objects in local repository
