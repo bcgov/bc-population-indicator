@@ -74,14 +74,13 @@ plot(bc_plot)
 
 ## plotting 2 barcharts for 2017 Greater Vancouver and other regional districts
 
-gv_barchart <- ggplot(data = popn_gv, aes(x = Regional_District, y = popn_thousand)) +
+mv_barchart <- ggplot(data = popn_mv, aes(x = Regional_District, y = popn_thousand)) +
   geom_bar(stat = "identity", position = "identity", fill = "#767676", 
            colour = "grey30", size = 0.2, alpha = 0.9) +
-  labs(xlab("")) +
-  labs(ylab("Population (*1000)")) +
+  labs(x = "", y = "Population (*1000)") +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 2500, 500), limits = c(0, 2610)) +
+  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 3000, 500), limits = c(0, 3000)) +
   theme_soe() +
   theme(axis.title.y = element_blank(),
         axis.title.x = element_text(margin = margin(10, 0, 0, 0), size = 14),
@@ -96,7 +95,7 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
   geom_bar(stat = "identity", colour = "grey30", size = 0.3, alpha = 0.9, fill = "#ececec") +
   coord_flip() +
   scale_x_discrete(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 400, 80), limits = c(0, 415)) +
+  scale_y_continuous(expand = c(0, 0), breaks = seq(0, 480, 80), limits = c(0, 480)) +
   theme_soe() +
   theme(axis.title = element_blank(),
         axis.text.x = element_text(size = 12),
@@ -106,47 +105,47 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
         legend.position = "none",
         text = element_text(family = "Verdana"))
 
-# multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(1.1, 0.13))
+# multiplot(rest_barchart, mv_barchart, cols = 1, heights = c(1.1, 0.13))
 
 ## Using `patchwork`
-rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
+rest_barchart + mv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
 
+## plotting current population density map
+# colrs <- c("#ffffe5", "#fee391", "#fe9929", "#662506")
+# names(colrs) <- catlab
+colfunc <- colorRampPalette(c("grey", "blue"))
+colrs = colfunc(7)
+names(colrs) = catlab
 
-## @knitr plot16
-
-## plotting 2017 population density map
-colrs <- c("#ffffe5", "#fee391", "#fe9929", "#662506")
-names(colrs) <- catlab
-
-popn_plot17 <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = cat)) +
+popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = cat)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey50", size = 0.3) +
-  coord_fixed() + 
+  coord_fixed() +
   scale_fill_manual(values = colrs, drop = FALSE,
-                    name = "2017\nPopulation Density\n(Population/km2)") +
+                    name = paste0(max_year,"\nPopulation Density\n(Population/km2)")) +
   theme_minimal() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
         legend.title = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 13),
-        legend.position = c(0.17, 0.15),
+        legend.position = c(0.85, 0.7),
         plot.margin = unit(c(15, 5, 5, 5), "mm"),
         text = element_text(family = "Verdana"))
-plot(popn_plot17)  
+plot(popn_plot)
 
 ## @knitr change_map
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
-pal <- c(brewer.pal(5, "YlOrBr")[5:1], brewer.pal(3, "Greys"))
+pal <- c(brewer.pal(5, "Blues")[5:1], brewer.pal(3, "Greys"))
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = percchange)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey50", size = 0.3) +
   coord_fixed() + 
   scale_fill_gradientn(limits = c(-50, 115), colours = rev(pal), 
-                       guide = (guide_colourbar(title = "Percent Change\nin Population (1986-2017)",
+                       guide = (guide_colourbar(title = paste0("Percent Change\nin Population (1986-",max_year,")"),
                                                 title.position = "bottom"))) +
   theme_minimal() +
   theme(axis.title = element_blank(),
@@ -159,8 +158,6 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = p
         plot.margin = unit(c(5, 5, 5, 5), "mm"))
 plot(rd_plot)
 
-## @knitr stop
-
 ## saving plots as SVG
 
 ## create a folder to store the output plots
@@ -171,12 +168,12 @@ plot(bc_plot)
 dev.off()
 
 svg_px("./out/barcharts.svg", width = 500, height = 500)
-#multiplot(rest_barchart, gv_barchart, cols = 1, heights = c(.9, 0.13))
-rest_barchart + gv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
+#multiplot(rest_barchart, mv_barchart, cols = 1, heights = c(.9, 0.13))
+rest_barchart + mv_barchart + plot_layout(ncol = 1, heights = c(14, .5))
 dev.off()
 
 svg_px("./out/popn_viz.svg", width = 500, height = 500)
-plot(popn_plot17)
+plot(popn_plot)
 dev.off()
 
 svg_px("./out/popn_pctplot.svg", width = 650, height = 550)
