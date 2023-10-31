@@ -58,7 +58,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   xlab("") +
   ylab("B.C. Population (Million)") +
   annotate("text", x = 1925, y = 4.1, label = "When British Columbia joined Canada in 1871,\nthe population was estimated to be about 40,000 people.\nBritish Columbia's current population is\n 5.32 million people.",
-           size = 5, family = "Verdana") +
+           size = 5) +
   annotation_custom(g, xmin = 1975, xmax = 2000, ymin = 0.5, ymax = 2) +
   scale_x_continuous(limits = c(1867, max_year), breaks = seq(1867, max_year, 31), expand = c(0.02, 0)) +
   scale_y_continuous(limits = c(0, 5.5), expand = c(0.04, 0), breaks = seq(0,5, 1)) +
@@ -66,7 +66,7 @@ bc_plot <- ggplot(data = popn_bc, aes(x = Year, y = popn_million)) +
   theme(axis.text = element_text(size = 14),
         panel.grid = element_blank(),
         axis.title.y = element_text(margin = margin(0, 10, 0, 0), size = 16),
-        text = element_text(family = "Verdana"),
+        text = element_text(),
         plot.margin = unit(c(5, 5, 5, 5), "mm")) 
 plot(bc_plot)
 
@@ -89,7 +89,7 @@ mv_barchart <- ggplot(data = popn_mv, aes(x = Regional_District, y = popn_thousa
         legend.position = "none",
         panel.grid = element_blank(),
         plot.margin = unit(c(0, 5, 5, 15), "mm"),
-        text = element_text(family = "Verdana"))
+        text = element_text())
 
 rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -popn_thousand), y = popn_thousand)) +
   geom_bar(stat = "identity", colour = "grey30", size = 0.3, alpha = 0.9, fill = "#ececec") +
@@ -103,7 +103,7 @@ rest_barchart <- ggplot(data = popn_rest, aes(x = reorder(Regional_District, -po
         panel.grid = element_blank(),
         plot.margin = unit(c(15, 10, 5, 0), "mm"),
         legend.position = "none",
-        text = element_text(family = "Verdana"))
+        text = element_text())
 
 # multiplot(rest_barchart, mv_barchart, cols = 1, heights = c(1.1, 0.13))
 
@@ -131,20 +131,20 @@ popn_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill =
         legend.text = element_text(size = 13),
         legend.position = c(0.85, 0.7),
         plot.margin = unit(c(15, 5, 5, 5), "mm"),
-        text = element_text(family = "Verdana"))
+        text = element_text())
 plot(popn_plot)
 
 ## @knitr change_map
 
 ## plotting chloropleth
 ## creating a colour brewer palette from http://colorbrewer2.org/
-pal <- c(brewer.pal(5, "Blues")[5:1], brewer.pal(3, "Greys"))
+pal <- c(brewer.pal(9, "Blues")[9:1], brewer.pal(3, "Greys"))
 
 rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = percchange)) +
   geom_polygon(alpha = 0.9) +
   geom_path(colour = "grey50", size = 0.3) +
   coord_fixed() + 
-  scale_fill_gradientn(limits = c(-50, 115), colours = rev(pal), 
+  scale_fill_gradientn(limits = c(-50, 160), colours = rev(pal), 
                        guide = (guide_colourbar(title = paste0("Percent Change\nin Population (1986-",max_year,")"),
                                                 title.position = "bottom"))) +
   theme_minimal() +
@@ -154,7 +154,7 @@ rd_plot <- ggplot(data = cd_plot, aes(x = long, y = lat, group = group, fill = p
         legend.title = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 13),
         legend.position = c(0.15, 0.2),
-        text = element_text(family = "Verdana"),
+        text = element_text(),
         plot.margin = unit(c(5, 5, 5, 5), "mm"))
 plot(rd_plot)
 
