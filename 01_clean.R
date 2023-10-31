@@ -139,7 +139,7 @@ popn_change <- popn %>%
   filter(Year %in% c(min(Year), max(Year))) %>% 
   group_by(Regional_District) %>% 
   mutate(popchange = Population-lag(Population)) %>% 
-  mutate(percchange = round((popchange/Population * 100), digits = 0)) %>% 
+  mutate(percchange = round((popchange/lag(Population) * 100), digits = 0)) %>% 
   filter(Year == max(Year)) %>% 
   select(-Year) 
 
@@ -147,7 +147,7 @@ popn_change <- popn %>%
 popn_change_range = popn %>%
   group_by(Regional_District) %>%
   mutate(popchange = Population - Population[Year == min(Year)],
-         percchange = round((popchange/Population * 100), digits = 0),
+         percchange = round((popchange/Population[Year == min(Year)] * 100), digits = 0),
          percchange = replace_na(percchange, 0))
  
 ## Combine density and change metrics into one df  
