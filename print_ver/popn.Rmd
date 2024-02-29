@@ -72,9 +72,9 @@ The number of people living in British Columbia has increased faster than the na
 
 * British Columbia's population is not evenly distributed throughout the province.
 
-* The Metro Vancouver Regional District is home to over half (`r paste0(round(popsummary$Population[popsummary$Regional_District=="Metro Vancouver"]/ popsummary$Population[popsummary$Regional_District=="British Columbia"]*100,1), " %")`) of British Columbian's---it is by far B.C.'s largest and most dense regional population. The Capital and Fraser Valley Regional Districts are next largest and each have  `r round(popsummary[popsummary$Regional_District == "Capital", "Population"]/1000, 1)` and `r round(popsummary[popsummary$Regional_District == "Fraser Valley", "Population"]/1000, 1)` thousand people respectively. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
+* The Metro Vancouver Regional District is home to over half (`r paste0(round(popsummary$Population[popsummary$Regional_District=="Metro Vancouver"]/ popsummary$Population[popsummary$Regional_District=="British Columbia"]*100,1), " %")`) of British Columbian's---it is by far B.C.'s largest and most dense regional population. The Capital and Fraser Valley Regional Districts are next largest and each have  `r round(popsummary[popsummary$Regional_District == "Capital", "Population"]/1000, 0)` and `r round(popsummary[popsummary$Regional_District == "Fraser Valley", "Population"]/1000, 0)` thousand people respectively. The Stikine and Central Coast Regional Districts have the smallest regional populations in the province.
 
-* Metro Vancouver has the highest population density with greater than `r signif(popsummary$density[popsummary$Regional_District=="Metro Vancouver"], 1) `  people per square kilometer, followed by the Capital Regional District with just under `r signif(popsummary$density[popsummary$Regional_District=="Capital"], 2)` people per square kilometer. Population density in most of B.C.'s regional districts is fewer than 10 people per square kilometer.
+* Metro Vancouver has the highest population density with greater than `r signif(popsummary$density[popsummary$Regional_District=="Metro Vancouver"], 1) `  people per square kilometer, followed by the Capital Regional District with just under `r signif(popsummary$density[popsummary$Regional_District=="Capital"], 2)` people per square kilometer. Population density in the vast majority of B.C.'s regional districts (21/29) is fewer than 10 people per square kilometer.
 
 \vspace{10pt}
 
@@ -85,11 +85,11 @@ rest_barchart + popn_plot + mv_barchart + plot_layout(ncol = 2, heights = c(14, 
 \newpage
 
 ## B.C. Population Change by Regional District (1986-`r max_year`)
-* British Columbia's population increased by `r paste0(round(popsummary$percchange[popsummary$Regional_District=="British Columbia"],1), " %")` from 1986 to `r max_year`.
+* British Columbia's population increased by `r paste0(round(popsummary$percchange[popsummary$Regional_District=="British Columbia"],1), "%")` from 1986 to `r max_year`.
 
-* The Central Okanagan has seen the largest regional population increase- `r paste0(round(popsummary$percchange[popsummary$Regional_District=="Central Okanagan"],1), " %")` since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional Districts have all doubled in population size, and Metro Vancouver and Comox Valley have shown increase greater than 90%.
+* The Central Okanagan has seen the largest regional population increase- `r paste0(round(popsummary$percchange[popsummary$Regional_District=="Central Okanagan"],1), "%")` since 1986. Squamish-Lillooet, Fraser Valley, and Nanaimo Regional Districts have all doubled in population size, and Metro Vancouver and Comox Valley have increases greater than 90%.
 
-* The Stikine has seen the largest decrease in regional population size, a `r paste0(abs(round(popsummary$percchange[popsummary$Regional_District=="Stikine"],1)), " %")` decline, since 1986. The North Coast and Mount Waddington Regional Districts have also experienced recent large declines in population size.
+* The Stikine has seen the largest decrease in regional population size, a `r paste0(abs(round(popsummary$percchange[popsummary$Regional_District=="Stikine"],1)), "%")` decline, since 1986. The North Coast and Mount Waddington Regional Districts have also experienced recent large declines in population size.
 
 \vspace{10pt}
 
