@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.10.26)  31 OCT 2023 12:00
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.10.26)  2 NOV 2023 13:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -842,7 +842,7 @@ Package fancyhdr Warning: \headheight is too small (42.67912pt):
 File: popn_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use popn_files/figure-latex/unnamed-chunk-2-1.pdf>
 
-Overfull \hbox (9.09875pt too wide) in paragraph at lines 197--198
+Overfull \hbox (9.09875pt too wide) in paragraph at lines 198--199
 [][] 
  []
 
@@ -859,7 +859,7 @@ Package fancyhdr Warning: \headheight is too small (42.67912pt):
 File: popn_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
 <use popn_files/figure-latex/unnamed-chunk-3-1.pdf>
 
-Overfull \hbox (9.09875pt too wide) in paragraph at lines 222--223
+Overfull \hbox (9.09875pt too wide) in paragraph at lines 223--224
 [][] 
  []
 
